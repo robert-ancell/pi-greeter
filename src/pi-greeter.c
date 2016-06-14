@@ -59,9 +59,7 @@ static GdkPixbuf *background_pixbuf = NULL;
 /* Panel Widgets */
 static GtkWindow *panel_window;
 static GtkWidget *clock_label;
-static GtkWidget *menubar, *power_menuitem, *session_menuitem, *language_menuitem, *a11y_menuitem, *session_badge;
-static GtkWidget *suspend_menuitem, *hibernate_menuitem, *restart_menuitem, *shutdown_menuitem;
-static GtkWidget *keyboard_menuitem;
+static GtkWidget *menubar, *power_menuitem, *session_menuitem, *language_menuitem, *a11y_menuitem;
 static GtkMenu *session_menu, *language_menu;
 
 /* Login Window Widgets */
@@ -75,8 +73,6 @@ static GtkButton *cancel_button, *login_button;
 
 static gchar *clock_format;
 static gchar **a11y_keyboard_command;
-static GPid a11y_kbd_pid = 0;
-static GError *a11y_keyboard_error;
 static GtkWindow *onboard_window;
 
 /* Pending Questions */
@@ -1017,15 +1013,6 @@ language_selected_cb(GtkMenuItem *menuitem, gpointer user_data)
     }
 }
 
-static void
-power_menu_cb (GtkWidget *menuitem, gpointer userdata)
-{
-    gtk_widget_set_sensitive (suspend_menuitem, lightdm_get_can_suspend());
-    gtk_widget_set_sensitive (hibernate_menuitem, lightdm_get_can_hibernate());
-    gtk_widget_set_sensitive (restart_menuitem, lightdm_get_can_restart());
-    gtk_widget_set_sensitive (shutdown_menuitem, lightdm_get_can_shutdown());
-}
-
 gboolean
 password_key_press_cb (GtkWidget *widget, GdkEventKey *event, gpointer user_data);
 G_MODULE_EXPORT
@@ -1565,140 +1552,6 @@ user_removed_cb (LightDMUserList *user_list, LightDMUser *user)
 
     model = gtk_combo_box_get_model (user_combo);
     gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
-}
-
-void a11y_font_cb (GtkCheckMenuItem *item);
-G_MODULE_EXPORT
-void
-a11y_font_cb (GtkCheckMenuItem *item)
-{
-    if (gtk_check_menu_item_get_active (item))
-    {
-        gchar *font_name, **tokens;
-        guint length;
-
-        /* Hide the clock since indicators are about to eat the screen. */
-        gtk_widget_hide(GTK_WIDGET(clock_label));
-
-        g_object_get (gtk_settings_get_default (), "gtk-font-name", &font_name, NULL);
-        tokens = g_strsplit (font_name, " ", -1);
-        length = g_strv_length (tokens);
-        if (length > 1)
-        {
-            gint size = atoi (tokens[length - 1]);
-            if (size > 0)
-            {
-                g_free (tokens[length - 1]);
-                tokens[length - 1] = g_strdup_printf ("%d", size + 10);
-                g_free (font_name);
-                font_name = g_strjoinv (" ", tokens);
-            }
-        }
-        g_strfreev (tokens);
-
-        g_object_set (gtk_settings_get_default (), "gtk-font-name", font_name, NULL);
-    }
-    else
-    {
-        g_object_set (gtk_settings_get_default (), "gtk-font-name", default_font_name, NULL);
-        /* Show the clock as needed */
-        gtk_widget_show_all(GTK_WIDGET(clock_label));
-    }
-}
-
-void a11y_contrast_cb (GtkCheckMenuItem *item);
-G_MODULE_EXPORT
-void
-a11y_contrast_cb (GtkCheckMenuItem *item)
-{
-    if (gtk_check_menu_item_get_active (item))
-    {
-        g_object_set (gtk_settings_get_default (), "gtk-theme-name", "HighContrast", NULL);
-        g_object_set (gtk_settings_get_default (), "gtk-icon-theme-name", "HighContrast", NULL);
-    }
-    else
-    {
-        g_object_set (gtk_settings_get_default (), "gtk-theme-name", default_theme_name, NULL);
-        g_object_set (gtk_settings_get_default (), "gtk-icon-theme-name", default_icon_theme_name, NULL);
-    }
-}
-
-static void
-keyboard_terminated_cb (GPid pid, gint status, gpointer user_data)
-{
-    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (keyboard_menuitem), FALSE);
-}
-
-void a11y_keyboard_cb (GtkCheckMenuItem *item);
-G_MODULE_EXPORT
-void
-a11y_keyboard_cb (GtkCheckMenuItem *item)
-{
-    if (gtk_check_menu_item_get_active (item))
-    {
-        gboolean spawned = FALSE;
-        if (onboard_window)
-        {
-            GtkSocket* socket = NULL;
-            gint out_fd = 0;
-
-            if (g_spawn_async_with_pipes (NULL, a11y_keyboard_command, NULL, G_SPAWN_SEARCH_PATH,
-                                          NULL, NULL, &a11y_kbd_pid, NULL, &out_fd, NULL,
-                                          &a11y_keyboard_error))
-            {
-                gchar* text = NULL;
-                GIOChannel* out_channel = g_io_channel_unix_new (out_fd);
-                if (g_io_channel_read_line(out_channel, &text, NULL, NULL, &a11y_keyboard_error) == G_IO_STATUS_NORMAL)
-                {
-                    gchar* end_ptr = NULL;
-
-                    text = g_strstrip (text);
-                    gint id = g_ascii_strtoll (text, &end_ptr, 0);
-
-                    if (id != 0 && end_ptr > text)
-                    {
-                        socket = GTK_SOCKET (gtk_socket_new ());
-                        gtk_container_add (GTK_CONTAINER (onboard_window), GTK_WIDGET (socket));
-                        gtk_socket_add_id (socket, id);
-                        gtk_widget_show_all (GTK_WIDGET (onboard_window));
-                        spawned = TRUE;
-                    }
-                    else
-                        g_debug ("onboard keyboard command error : 'unrecognized output'");
-
-                    g_free(text);
-                }
-            }
-        }
-        else
-        {
-            spawned = g_spawn_async (NULL, a11y_keyboard_command, NULL,
-                                     G_SPAWN_SEARCH_PATH | G_SPAWN_DO_NOT_REAP_CHILD,
-                                     NULL, NULL, &a11y_kbd_pid, &a11y_keyboard_error);
-            if (spawned)
-                g_child_watch_add (a11y_kbd_pid, keyboard_terminated_cb, NULL);
-        }
-
-        if(!spawned)
-        {
-            if (a11y_keyboard_error)
-                g_debug ("a11y keyboard command error : '%s'", a11y_keyboard_error->message);
-            a11y_kbd_pid = 0;
-            g_clear_error(&a11y_keyboard_error);
-            gtk_check_menu_item_set_active (item, FALSE);
-        }
-    }
-    else
-    {
-        if (a11y_kbd_pid != 0)
-        {
-            kill (a11y_kbd_pid, SIGTERM);
-            g_spawn_close_pid (a11y_kbd_pid);
-            a11y_kbd_pid = 0;
-            if (onboard_window)
-                gtk_widget_hide (GTK_WIDGET(onboard_window));
-        }
-    }
 }
 
 static void
@@ -2311,17 +2164,6 @@ main (int argc, char **argv)
     builder = gtk_builder_new ();
 	gtk_builder_add_from_file (builder, GREETER_DATA_DIR "/pi-greeter.glade", NULL);
     
-    /* Panel */
-    panel_window = GTK_WINDOW (gtk_builder_get_object (builder, "panel_window"));
-    gtk_label_set_text (GTK_LABEL (gtk_builder_get_object (builder, "hostname_label")), lightdm_get_hostname ());
-    session_menu = GTK_MENU(gtk_builder_get_object (builder, "session_menu"));
-    language_menu = GTK_MENU(gtk_builder_get_object (builder, "language_menu"));
-    clock_label = GTK_WIDGET(gtk_builder_get_object (builder, "clock_label"));
-    menubar = GTK_WIDGET (gtk_builder_get_object (builder, "menubar"));
-    /* Never allow the panel-window to be moved via the menubar */
-    
-    keyboard_menuitem = GTK_WIDGET (gtk_builder_get_object (builder, "keyboard_menuitem"));
-
     /* Login window */
     login_window = GTK_WINDOW (gtk_builder_get_object (builder, "login_window"));
     user_image = GTK_IMAGE (gtk_builder_get_object (builder, "user_image"));
@@ -2356,17 +2198,6 @@ main (int argc, char **argv)
     gtk_widget_set_tooltip_text(GTK_WIDGET(password_entry), _("Enter your password"));
     gtk_widget_set_tooltip_text(GTK_WIDGET(username_entry), _("Enter your username"));
 
-    /* Indicators */
-    session_menuitem = GTK_WIDGET (gtk_builder_get_object (builder, "session_menuitem"));
-    language_menuitem = GTK_WIDGET (gtk_builder_get_object (builder, "language_menuitem"));
-    a11y_menuitem = GTK_WIDGET (gtk_builder_get_object (builder, "a11y_menuitem"));
-    power_menuitem = GTK_WIDGET (gtk_builder_get_object (builder, "power_menuitem"));
-
-    gtk_accel_map_add_entry ("<Login>/a11y/font", GDK_KEY_F1, 0);
-    gtk_accel_map_add_entry ("<Login>/a11y/contrast", GDK_KEY_F2, 0);
-    gtk_accel_map_add_entry ("<Login>/a11y/keyboard", GDK_KEY_F3, 0);
-    gtk_accel_map_add_entry ("<Login>/power/shutdown", GDK_KEY_F4, GDK_MOD1_MASK);
-
 #ifdef START_INDICATOR_SERVICES
     init_indicators (config, &indicator_pid, &spi_pid);
 #else
@@ -2391,97 +2222,10 @@ main (int argc, char **argv)
     }
 
     /* Clock */
-    gtk_widget_set_no_show_all(GTK_WIDGET(clock_label),
-                           !g_key_file_get_boolean (config, "greeter", "show-clock", NULL));
-    gtk_widget_show_all(GTK_WIDGET(clock_label));
     clock_format = g_key_file_get_value (config, "greeter", "clock-format", NULL);
     if (!clock_format)
         clock_format = "%a, %H:%M";
     clock_timeout_thread();
-
-    /* Session menu */
-    if (gtk_widget_get_visible (session_menuitem))
-    {
-        session_badge = gtk_image_new_from_icon_name ("document-properties", GTK_ICON_SIZE_MENU);
-        gtk_widget_show (session_badge);
-        gtk_container_add (GTK_CONTAINER (session_menuitem), session_badge);
-
-        items = lightdm_get_sessions ();
-        GSList *sessions = NULL;
-        for (item = items; item; item = item->next)
-        {
-            LightDMSession *session = item->data;
-            GtkWidget *radiomenuitem;
-            
-            radiomenuitem = gtk_radio_menu_item_new_with_label (sessions, lightdm_session_get_name (session));
-            g_object_set_data (G_OBJECT (radiomenuitem), "session-key", (gpointer) lightdm_session_get_key (session));
-            sessions = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (radiomenuitem));
-            g_signal_connect(G_OBJECT(radiomenuitem), "activate", G_CALLBACK(session_selected_cb), NULL);
-            gtk_menu_shell_append (GTK_MENU_SHELL(session_menu), radiomenuitem);
-            gtk_widget_show (GTK_WIDGET (radiomenuitem));
-        }
-        set_session (NULL);
-    }
-
-    /* Language menu */
-    if (gtk_widget_get_visible (language_menuitem))
-    {
-        items = lightdm_get_languages ();
-        GSList *languages = NULL;
-        for (item = items; item; item = item->next)
-        {
-            LightDMLanguage *language = item->data;
-            const gchar *country, *code;
-            gchar *label;
-            GtkWidget *radiomenuitem;
-
-            country = lightdm_language_get_territory (language);
-            if (country)
-                label = g_strdup_printf ("%s - %s", lightdm_language_get_name (language), country);
-            else
-                label = g_strdup (lightdm_language_get_name (language));
-                
-            code = lightdm_language_get_code (language);
-            gchar *modifier = strchr (code, '@');
-            if (modifier != NULL)
-            {
-                gchar *label_new = g_strdup_printf ("%s [%s]", label, modifier+1);
-                g_free (label);
-                label = label_new;
-            }
-
-            radiomenuitem = gtk_radio_menu_item_new_with_label (languages, label);
-            g_object_set_data (G_OBJECT (radiomenuitem), "language-code", (gpointer) code);
-            languages = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (radiomenuitem));
-            g_signal_connect(G_OBJECT(radiomenuitem), "activate", G_CALLBACK(language_selected_cb), NULL);
-            gtk_menu_shell_append (GTK_MENU_SHELL(language_menu), radiomenuitem);
-            gtk_widget_show (GTK_WIDGET (radiomenuitem));
-        }
-        set_language (NULL);
-    }
-    
-    /* a11y menu */
-    if (gtk_widget_get_visible (a11y_menuitem))
-    {
-        image = gtk_image_new_from_icon_name ("preferences-desktop-accessibility", GTK_ICON_SIZE_MENU);
-        gtk_widget_show (image);
-        gtk_container_add (GTK_CONTAINER (a11y_menuitem), image);
-    }
-
-    /* Power menu */
-    if (gtk_widget_get_visible (power_menuitem))
-    {
-        image = gtk_image_new_from_icon_name ("system-shutdown", GTK_ICON_SIZE_MENU);
-        gtk_widget_show (image);
-        gtk_container_add (GTK_CONTAINER (power_menuitem), image);
-
-        suspend_menuitem = (GTK_WIDGET (gtk_builder_get_object (builder, "suspend_menuitem")));
-        hibernate_menuitem = (GTK_WIDGET (gtk_builder_get_object (builder, "hibernate_menuitem")));
-        restart_menuitem = (GTK_WIDGET (gtk_builder_get_object (builder, "restart_menuitem")));
-        shutdown_menuitem = (GTK_WIDGET (gtk_builder_get_object (builder, "shutdown_menuitem")));
-
-        g_signal_connect (G_OBJECT (power_menuitem),"activate", G_CALLBACK(power_menu_cb), NULL);
-    }
 
     /* Users combobox */
     renderer = gtk_cell_renderer_text_new();
@@ -2558,7 +2302,6 @@ main (int argc, char **argv)
     center_window (login_window,  NULL, &main_window_pos);
     g_signal_connect (GTK_WIDGET (login_window), "size-allocate", G_CALLBACK (center_window), &main_window_pos);
 
-    gtk_widget_show (GTK_WIDGET (panel_window));
     GtkAllocation allocation;
     gtk_widget_get_allocation (GTK_WIDGET (panel_window), &allocation);
     gdk_screen_get_monitor_geometry (gdk_screen_get_default (), gdk_screen_get_primary_monitor (gdk_screen_get_default ()), &monitor_geometry);
@@ -2568,22 +2311,6 @@ main (int argc, char **argv)
     gtk_widget_show (GTK_WIDGET (login_window));
     gdk_window_focus (gtk_widget_get_window (GTK_WIDGET (login_window)), GDK_CURRENT_TIME);
 
-    if (a11y_keyboard_command)
-    {
-        /* If command is onboard, position the application at the bottom-center of the screen */
-        if (g_strcmp0(a11y_keyboard_command[0], "onboard") == 0)
-        {
-            gint argp;
-            value = "onboard --xid";
-            g_debug ("a11y keyboard command is now '%s'", value);
-            g_shell_parse_argv (value, &argp, &a11y_keyboard_command, NULL);
-            onboard_window = GTK_WINDOW (gtk_window_new(GTK_WINDOW_TOPLEVEL));
-            gtk_widget_set_size_request (GTK_WIDGET (onboard_window), 605, 205);
-            gtk_window_move (onboard_window, (monitor_geometry.width - 605)/2, monitor_geometry.height - 205);
-        }
-    }
-    gtk_widget_set_sensitive (keyboard_menuitem, a11y_keyboard_command != NULL);
-    gtk_widget_set_visible (keyboard_menuitem, a11y_keyboard_command != NULL);
     gdk_threads_add_timeout (1000, (GSourceFunc) clock_timeout_thread, NULL);
 
     /* focus fix (source: unity-greeter) */
