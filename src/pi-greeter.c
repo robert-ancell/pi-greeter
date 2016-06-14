@@ -30,11 +30,7 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gdk/gdkx.h>
 #include <glib.h>
-#if GTK_CHECK_VERSION (3, 0, 0)
-#include <gtk/gtkx.h>
-#else
 #include <gdk/gdkkeysyms.h>
-#endif
 #include <glib/gslist.h>
 
 #ifdef HAVE_LIBINDICATOR
@@ -95,17 +91,10 @@ static gchar *current_language;
 /* Screensaver values */
 int timeout, interval, prefer_blanking, allow_exposures;
 
-#if GTK_CHECK_VERSION (3, 0, 0)
-static GdkRGBA *default_background_color = NULL;
-#else
 static GdkColor *default_background_color = NULL;
-#endif
 static gboolean cancelling = FALSE, prompted = FALSE;
 static gboolean prompt_active = FALSE, password_prompted = FALSE;
-#if GTK_CHECK_VERSION (3, 0, 0)
-#else
 static GdkRegion *window_region = NULL;
-#endif
 
 typedef struct
 {
@@ -206,11 +195,7 @@ create_menuitem (IndicatorObject *io, IndicatorObjectEntry *entry, GtkWidget *me
     GtkWidget *box, *menuitem;
     gint index = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (io), "indicator-custom-index-data"));
 
-#if GTK_CHECK_VERSION (3, 0, 0)
-    box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 3);
-#else
     box = gtk_hbox_new (FALSE, 0);
-#endif
     menuitem = gtk_menu_item_new ();
 
     gtk_widget_add_events(GTK_WIDGET(menuitem), GDK_SCROLL_MASK);
@@ -566,18 +551,6 @@ set_session (const gchar *session)
             for (menu_iter = menu_items; menu_iter != NULL; menu_iter = g_list_next(menu_iter))
                 if (g_strcmp0 (session, g_object_get_data (G_OBJECT (menu_iter->data), "session-key")) == 0)
                 {
-#if GTK_CHECK_VERSION (3, 0, 0)
-                    /* Set menuitem-image to session-badge */
-                    GtkIconTheme *icon_theme = gtk_icon_theme_get_default();
-                    gchar* session_name = g_ascii_strdown (session, -1);
-                    gchar* icon_name = g_strdup_printf ("%s_badge-symbolic", session_name);
-                    g_free (session_name);
-                    if (gtk_icon_theme_has_icon(icon_theme, icon_name))
-                        gtk_image_set_from_icon_name (GTK_IMAGE(session_badge), icon_name, GTK_ICON_SIZE_MENU);
-                    else
-                        gtk_image_set_from_icon_name (GTK_IMAGE(session_badge), "document-properties-symbolic", GTK_ICON_SIZE_MENU);
-                    g_free (icon_name);
-#endif
                     break;
                 }
         }
@@ -789,45 +762,6 @@ center_window (GtkWindow *window, GtkAllocation *unused, const WindowPosition *p
                      monitor_geometry.y + get_absolute_position (&pos->y, monitor_geometry.height, allocation.height));
 }
 
-#if GTK_CHECK_VERSION (3, 0, 0)
-/* Use the much simpler fake transparency by drawing the window background with Cairo for Gtk3 */
-static gboolean
-background_window_draw (GtkWidget *widget, cairo_t *cr, gpointer user_data)
-{
-    if (background_pixbuf)
-        gdk_cairo_set_source_pixbuf (cr, background_pixbuf, 0, 0);
-    else
-        gdk_cairo_set_source_rgba (cr, default_background_color);
-    cairo_paint (cr);
-    return FALSE;
-}
-
-static gboolean
-login_window_draw (GtkWidget *widget, cairo_t *cr, gpointer user_data)
-{
-    GdkScreen *screen = gtk_window_get_screen (GTK_WINDOW(widget));
-    GtkAllocation *allocation = g_new0 (GtkAllocation, 1);
-    GdkRectangle monitor_geometry;
-    gint x,y;
-
-    if (background_pixbuf)
-    {
-        gdk_screen_get_monitor_geometry (screen, gdk_screen_get_primary_monitor (screen), &monitor_geometry);
-        gtk_widget_get_allocation (widget, allocation);
-        x = get_absolute_position (&main_window_pos.x, monitor_geometry.width, allocation->width);
-        y = get_absolute_position (&main_window_pos.y, monitor_geometry.height, allocation->height);
-        gdk_cairo_set_source_pixbuf (cr, background_pixbuf, monitor_geometry.x - x, monitor_geometry.y - y);
-    }
-    else
-        gdk_cairo_set_source_rgba (cr, default_background_color);
-
-    cairo_paint (cr);
-
-    g_free (allocation);
-    return FALSE;
-}
-
-#else
 static GdkRegion *
 cairo_region_from_rectangle (gint width, gint height, gint radius)
 {
@@ -908,7 +842,6 @@ background_window_expose (GtkWidget    *widget,
     cairo_paint (cr);
     return FALSE;
 }
-#endif
 
 static void
 start_authentication (const gchar *username)
@@ -1119,15 +1052,11 @@ password_key_press_cb (GtkWidget *widget, GdkEventKey *event, gpointer user_data
 
         if (event->keyval == GDK_KEY_Up)
         {
-            #if GTK_CHECK_VERSION (3, 0, 0)
-            available = gtk_tree_model_iter_previous (model, &iter);
-            #else
             GtkTreePath *path = gtk_tree_model_get_path (model, &iter);
             available = gtk_tree_path_prev (path);
             if (available)
                 available = gtk_tree_model_get_iter (model, &iter, path);
             gtk_tree_path_free (path);
-            #endif
         }
         else
             available = gtk_tree_model_iter_next (model, &iter);
@@ -1523,15 +1452,8 @@ show_power_prompt (const gchar* action, const gchar* message, const gchar* icon,
     gtk_message_dialog_set_image(GTK_MESSAGE_DIALOG(dialog), image);
 
     /* Make the dialog themeable and attractive */
-#if GTK_CHECK_VERSION (3, 0, 0)
-    gtk_style_context_add_class(GTK_STYLE_CONTEXT(gtk_widget_get_style_context(GTK_WIDGET(dialog))), "lightdm-gtk-greeter");
-#endif
     gtk_widget_set_name(dialog, dialog_name);
-#if GTK_CHECK_VERSION (3, 0, 0)
-    g_signal_connect (G_OBJECT (dialog), "draw", G_CALLBACK (login_window_draw), NULL);
-#else
     g_signal_connect (G_OBJECT (dialog), "size-allocate", G_CALLBACK (login_window_size_allocate), NULL);
-#endif
     gtk_container_set_border_width(GTK_CONTAINER (dialog), 18);
 
     /* Hide the login window and show the dialog */
@@ -1553,11 +1475,7 @@ void
 restart_cb (GtkWidget *widget, LightDMGreeter *greeter)
 {
     if (show_power_prompt(_("Restart"), _("Are you sure you want to close all programs and restart the computer?"),
-                          #if GTK_CHECK_VERSION (3, 0, 0)
-                          "view-refresh-symbolic",
-                          #else
                           "view-refresh",
-                          #endif
                           "restart_dialog", "restart_button"))
         lightdm_restart (NULL);
 }
@@ -1568,11 +1486,7 @@ void
 shutdown_cb (GtkWidget *widget, LightDMGreeter *greeter)
 {
     if (show_power_prompt(_("Shut Down"), _("Are you sure you want to close all programs and shut down the computer?"),
-                          #if GTK_CHECK_VERSION (3, 0, 0)
-                          "system-shutdown-symbolic",
-                          #else
                           "system-shutdown",
-                          #endif
                           "shutdown_dialog", "shutdown_button"))
         lightdm_shutdown (NULL);
 }
@@ -1960,11 +1874,7 @@ set_root_pixmap_id (GdkScreen *screen,
                 }
 
                 XSync (display, False);
-#if GTK_CHECK_VERSION (3, 0, 0)
-                gdk_error_trap_pop_ignored ();
-#else
                 gdk_error_trap_pop ();
-#endif
 
             }
         }
@@ -2102,11 +2012,7 @@ set_background (GdkPixbuf *new_bg)
             }
             else
             {
-#if GTK_CHECK_VERSION (3, 0, 0)
-                gdk_cairo_set_source_rgba (c, default_background_color);
-#else
                 gdk_cairo_set_source_color (c, default_background_color);
-#endif
                 background_pixbuf = NULL;
             }
             cairo_paint (c);
@@ -2189,11 +2095,7 @@ focus_upon_map (GdkXEvent *gxevent, GdkEvent *event, gpointer  data)
 
         /* Check to see if this window is our onboard window, since we don't want to focus it. */
         if (keyboard_win)
-#if GTK_CHECK_VERSION (3, 0, 0)
-                keyboard_xid = gdk_x11_window_get_xid (keyboard_win);
-#else
                 keyboard_xid = gdk_x11_drawable_get_xid (keyboard_win);
-#endif
 
         if (xwin != keyboard_xid
             && win_type != GDK_WINDOW_TYPE_HINT_TOOLTIP
@@ -2238,13 +2140,7 @@ main (int argc, char **argv)
     GtkCellRenderer *renderer;
     GtkWidget *image, *infobar_compat, *content_area;
     gchar *value, *state_dir;
-#if GTK_CHECK_VERSION (3, 0, 0)
-    GdkRGBA background_color;
-    GtkIconTheme *icon_theme;
-    GtkCssProvider *css_provider;
-#else
     GdkColor background_color;
-#endif
     GError *error = NULL;
 
     /* Background windows */
@@ -2273,11 +2169,8 @@ main (int argc, char **argv)
 
     g_unix_signal_add(SIGTERM, (GSourceFunc)gtk_main_quit, NULL);
 
-#if GTK_CHECK_VERSION (3, 0, 0)
-#else
     /* init threads */
     gdk_threads_init();
-#endif
 
     /* init gtk */
     gtk_init (&argc, &argv);
@@ -2318,11 +2211,7 @@ main (int argc, char **argv)
     value = g_key_file_get_value (config, "greeter", "background", NULL);
     if (!value)
         value = g_strdup ("#000000");
-#if GTK_CHECK_VERSION (3, 0, 0)
-    if (!gdk_rgba_parse (&background_color, value))
-#else
     if (!gdk_color_parse (value, &background_color))
-#endif
     {
         gchar *path;
         GError *error = NULL;
@@ -2342,11 +2231,7 @@ main (int argc, char **argv)
     else
     {
         g_debug ("Using background color %s", value);
-#if GTK_CHECK_VERSION (3, 0, 0)
-        default_background_color = gdk_rgba_copy (&background_color);
-#else
         default_background_color = gdk_color_copy (&background_color);
-#endif
     }
     g_free (value);
 
@@ -2428,22 +2313,12 @@ main (int argc, char **argv)
     
     /* Panel */
     panel_window = GTK_WINDOW (gtk_builder_get_object (builder, "panel_window"));
-#if GTK_CHECK_VERSION (3, 0, 0)
-    gtk_style_context_add_class(GTK_STYLE_CONTEXT(gtk_widget_get_style_context(GTK_WIDGET(panel_window))), "lightdm-gtk-greeter");
-    gtk_style_context_add_class(GTK_STYLE_CONTEXT(gtk_widget_get_style_context(GTK_WIDGET(panel_window))), GTK_STYLE_CLASS_MENUBAR);
-    g_signal_connect (G_OBJECT (panel_window), "draw", G_CALLBACK (background_window_draw), NULL);
-#endif
     gtk_label_set_text (GTK_LABEL (gtk_builder_get_object (builder, "hostname_label")), lightdm_get_hostname ());
     session_menu = GTK_MENU(gtk_builder_get_object (builder, "session_menu"));
     language_menu = GTK_MENU(gtk_builder_get_object (builder, "language_menu"));
     clock_label = GTK_WIDGET(gtk_builder_get_object (builder, "clock_label"));
     menubar = GTK_WIDGET (gtk_builder_get_object (builder, "menubar"));
     /* Never allow the panel-window to be moved via the menubar */
-#if GTK_CHECK_VERSION (3, 0, 0) 
-    css_provider = gtk_css_provider_new ();
-    gtk_css_provider_load_from_data (css_provider, "* { -GtkWidget-window-dragging: false; }", -1, NULL);
-    gtk_style_context_add_provider (GTK_STYLE_CONTEXT(gtk_widget_get_style_context(GTK_WIDGET(menubar))), GTK_STYLE_PROVIDER (css_provider), 800);
-#endif
     
     keyboard_menuitem = GTK_WIDGET (gtk_builder_get_object (builder, "keyboard_menuitem"));
 
@@ -2472,29 +2347,14 @@ main (int argc, char **argv)
     cancel_button = GTK_BUTTON (gtk_builder_get_object (builder, "cancel_button"));
     login_button = GTK_BUTTON (gtk_builder_get_object (builder, "login_button"));
 
-#if GTK_CHECK_VERSION (3, 0, 0)
-    g_signal_connect (G_OBJECT (login_window), "draw", G_CALLBACK (login_window_draw), NULL);
-#else
     g_signal_connect (G_OBJECT (login_window), "size-allocate", G_CALLBACK (login_window_size_allocate), NULL);
-#endif
 
     /* To maintain compatability with GTK+2, set special properties here */
-#if GTK_CHECK_VERSION (3, 0, 0)
-    gtk_style_context_add_class(GTK_STYLE_CONTEXT(gtk_widget_get_style_context(GTK_WIDGET(login_window))), "lightdm-gtk-greeter");
-    gtk_box_set_child_packing(GTK_BOX(content_area), GTK_WIDGET(message_label), TRUE, TRUE, 0, GTK_PACK_START);
-    gtk_window_set_has_resize_grip(GTK_WINDOW(panel_window), FALSE);
-    gtk_widget_set_margin_top(GTK_WIDGET(user_combo), 12);
-    gtk_widget_set_margin_bottom(GTK_WIDGET(password_entry), 12);
-    gtk_entry_set_placeholder_text(password_entry, _("Enter your password"));
-    gtk_entry_set_placeholder_text(username_entry, _("Enter your username"));
-    icon_theme = gtk_icon_theme_get_default();
-#else
     gtk_container_set_border_width (GTK_CONTAINER(gtk_builder_get_object (builder, "vbox2")), 18);
     gtk_container_set_border_width (GTK_CONTAINER(gtk_builder_get_object (builder, "content_frame")), 14);
     gtk_container_set_border_width (GTK_CONTAINER(gtk_builder_get_object (builder, "buttonbox_frame")), 8);
     gtk_widget_set_tooltip_text(GTK_WIDGET(password_entry), _("Enter your password"));
     gtk_widget_set_tooltip_text(GTK_WIDGET(username_entry), _("Enter your username"));
-#endif
 
     /* Indicators */
     session_menuitem = GTK_WIDGET (gtk_builder_get_object (builder, "session_menuitem"));
@@ -2542,14 +2402,7 @@ main (int argc, char **argv)
     /* Session menu */
     if (gtk_widget_get_visible (session_menuitem))
     {
-#if GTK_CHECK_VERSION (3, 0, 0)
-        if (gtk_icon_theme_has_icon(icon_theme, "document-properties-symbolic"))
-            session_badge = gtk_image_new_from_icon_name ("document-properties-symbolic", GTK_ICON_SIZE_MENU);
-        else
-            session_badge = gtk_image_new_from_icon_name ("document-properties", GTK_ICON_SIZE_MENU);
-#else
         session_badge = gtk_image_new_from_icon_name ("document-properties", GTK_ICON_SIZE_MENU);
-#endif
         gtk_widget_show (session_badge);
         gtk_container_add (GTK_CONTAINER (session_menuitem), session_badge);
 
@@ -2610,14 +2463,7 @@ main (int argc, char **argv)
     /* a11y menu */
     if (gtk_widget_get_visible (a11y_menuitem))
     {
-    #if GTK_CHECK_VERSION (3, 0, 0)
-        if (gtk_icon_theme_has_icon(icon_theme, "preferences-desktop-accessibility-symbolic"))
-            image = gtk_image_new_from_icon_name ("preferences-desktop-accessibility-symbolic", GTK_ICON_SIZE_MENU);
-        else
-            image = gtk_image_new_from_icon_name ("preferences-desktop-accessibility", GTK_ICON_SIZE_MENU);
-    #else
         image = gtk_image_new_from_icon_name ("preferences-desktop-accessibility", GTK_ICON_SIZE_MENU);
-    #endif
         gtk_widget_show (image);
         gtk_container_add (GTK_CONTAINER (a11y_menuitem), image);
     }
@@ -2625,14 +2471,7 @@ main (int argc, char **argv)
     /* Power menu */
     if (gtk_widget_get_visible (power_menuitem))
     {
-#if GTK_CHECK_VERSION (3, 0, 0)
-        if (gtk_icon_theme_has_icon(icon_theme, "system-shutdown-symbolic"))
-            image = gtk_image_new_from_icon_name ("system-shutdown-symbolic", GTK_ICON_SIZE_MENU);
-        else
-            image = gtk_image_new_from_icon_name ("system-shutdown", GTK_ICON_SIZE_MENU);
-#else
         image = gtk_image_new_from_icon_name ("system-shutdown", GTK_ICON_SIZE_MENU);
-#endif
         gtk_widget_show (image);
         gtk_container_add (GTK_CONTAINER (power_menuitem), image);
 
@@ -2664,11 +2503,7 @@ main (int argc, char **argv)
         
             window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
             gtk_window_set_type_hint(GTK_WINDOW(window), GDK_WINDOW_TYPE_HINT_DESKTOP);
-#if GTK_CHECK_VERSION (3, 0, 0)
-            gtk_widget_override_background_color(GTK_WIDGET(window), GTK_STATE_FLAG_NORMAL, &background_color);
-#else
             gtk_widget_modify_bg(GTK_WIDGET(window), GTK_STATE_NORMAL, &background_color);
-#endif
             gtk_window_set_screen(GTK_WINDOW(window), screen);
             gtk_window_set_keep_below(GTK_WINDOW(window), TRUE);
             gtk_widget_set_size_request(window, monitor_geometry.width, monitor_geometry.height);
@@ -2678,11 +2513,7 @@ main (int argc, char **argv)
 
             backgrounds = g_slist_prepend(backgrounds, window);
             gtk_widget_show (window);
-#if GTK_CHECK_VERSION (3, 0, 0)
-            g_signal_connect (G_OBJECT (window), "draw", G_CALLBACK (background_window_draw), NULL);
-#else
             g_signal_connect (G_OBJECT (window), "expose-event", G_CALLBACK (background_window_expose), NULL);
-#endif
             gtk_widget_queue_draw (GTK_WIDGET(window));
         }
     }
@@ -2760,15 +2591,9 @@ main (int argc, char **argv)
     gdk_window_set_events (root_window, gdk_window_get_events (root_window) | GDK_SUBSTRUCTURE_MASK);
     gdk_window_add_filter (root_window, focus_upon_map, NULL);
 
-#if GTK_CHECK_VERSION (3, 0, 0)
-#else
     gdk_threads_enter();
-#endif
     gtk_main ();
-#if GTK_CHECK_VERSION (3, 0, 0)
-#else
     gdk_threads_leave();
-#endif
 
 #ifdef START_INDICATOR_SERVICES
     if (indicator_pid)
@@ -2789,11 +2614,7 @@ main (int argc, char **argv)
     if (default_background_pixbuf)
         g_object_unref (default_background_pixbuf);
     if (default_background_color)
-#if GTK_CHECK_VERSION (3, 0, 0)
-        gdk_rgba_free (default_background_color);
-#else
         gdk_color_free (default_background_color);
-#endif
 
     {
 	int screen = XDefaultScreen (display);
