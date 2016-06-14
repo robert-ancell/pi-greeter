@@ -57,9 +57,7 @@ static GdkPixbuf *default_background_pixbuf = NULL;
 static GdkPixbuf *background_pixbuf = NULL;
 
 /* Panel Widgets */
-static GtkWindow *panel_window;
-static GtkWidget *clock_label;
-static GtkWidget *menubar, *power_menuitem, *session_menuitem, *language_menuitem, *a11y_menuitem;
+static GtkWidget *menubar, *power_menuitem, *session_menuitem, *language_menuitem;
 static GtkMenu *session_menu, *language_menu;
 
 /* Login Window Widgets */
@@ -71,7 +69,6 @@ static GtkLabel *message_label;
 static GtkInfoBar *info_bar;
 static GtkButton *cancel_button, *login_button;
 
-static gchar *clock_format;
 static gchar **a11y_keyboard_command;
 static GtkWindow *onboard_window;
 
@@ -359,7 +356,6 @@ init_indicators (GKeyFile* config)
     GHashTable *builtin_items = NULL;
     GHashTableIter iter;
     gpointer iter_value;
-    gboolean inited = FALSE;
     gboolean fallback = FALSE;
 
 #ifdef START_INDICATOR_SERVICES
@@ -386,7 +382,6 @@ init_indicators (GKeyFile* config)
         g_hash_table_insert (builtin_items, "~power", power_menuitem);
         g_hash_table_insert (builtin_items, "~session", session_menuitem);
         g_hash_table_insert (builtin_items, "~language", language_menuitem);
-        g_hash_table_insert (builtin_items, "~a11y", a11y_menuitem);
 
         g_hash_table_iter_init (&iter, builtin_items);
         while (g_hash_table_iter_next (&iter, NULL, &iter_value))
@@ -1118,8 +1113,6 @@ login_window_key_press_cb (GtkWidget *widget, GdkEventKey *event, gpointer user_
         item = session_menuitem;
     else if (event->keyval == GDK_KEY_F10)
         item = language_menuitem;
-    else if (event->keyval == GDK_KEY_F11)
-        item = a11y_menuitem;
     else if (event->keyval == GDK_KEY_F12)
         item = power_menuitem;
     else if (event->keyval != GDK_KEY_Escape &&
@@ -1881,27 +1874,6 @@ set_background (GdkPixbuf *new_bg)
         cairo_surface_destroy (surface);
     }
     gtk_widget_queue_draw (GTK_WIDGET (login_window));
-    gtk_widget_queue_draw (GTK_WIDGET (panel_window));
-}
-
-static gboolean
-clock_timeout_thread (void)
-{
-    time_t rawtime;
-    struct tm * timeinfo;
-    gchar time_str[50];
-    gchar *markup;
-    
-    time ( &rawtime );
-    timeinfo = localtime ( &rawtime );
-    
-    strftime(time_str, 50, clock_format, timeinfo);
-    markup = g_markup_printf_escaped("<b>%s</b>", time_str);
-    if (g_strcmp0(markup, gtk_label_get_label(GTK_LABEL(clock_label))) != 0)
-        gtk_label_set_markup( GTK_LABEL(clock_label), markup );
-    g_free(markup);
-    
-    return TRUE;
 }
 
 static gboolean
@@ -1989,9 +1961,8 @@ main (int argc, char **argv)
     GKeyFile *config;
     GdkRectangle monitor_geometry;
     GtkBuilder *builder;
-    const GList *items, *item;
     GtkCellRenderer *renderer;
-    GtkWidget *image, *infobar_compat, *content_area;
+    GtkWidget *infobar_compat, *content_area;
     gchar *value, *state_dir;
     GdkColor background_color;
     GError *error = NULL;
@@ -2221,12 +2192,6 @@ main (int argc, char **argv)
         g_free (value);
     }
 
-    /* Clock */
-    clock_format = g_key_file_get_value (config, "greeter", "clock-format", NULL);
-    if (!clock_format)
-        clock_format = "%a, %H:%M";
-    clock_timeout_thread();
-
     /* Users combobox */
     renderer = gtk_cell_renderer_text_new();
     gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (user_combo), renderer, TRUE);
@@ -2302,16 +2267,8 @@ main (int argc, char **argv)
     center_window (login_window,  NULL, &main_window_pos);
     g_signal_connect (GTK_WIDGET (login_window), "size-allocate", G_CALLBACK (center_window), &main_window_pos);
 
-    GtkAllocation allocation;
-    gtk_widget_get_allocation (GTK_WIDGET (panel_window), &allocation);
-    gdk_screen_get_monitor_geometry (gdk_screen_get_default (), gdk_screen_get_primary_monitor (gdk_screen_get_default ()), &monitor_geometry);
-    gtk_window_resize (panel_window, monitor_geometry.width, allocation.height);
-    gtk_window_move (panel_window, monitor_geometry.x, monitor_geometry.y);
-
     gtk_widget_show (GTK_WIDGET (login_window));
     gdk_window_focus (gtk_widget_get_window (GTK_WIDGET (login_window)), GDK_CURRENT_TIME);
-
-    gdk_threads_add_timeout (1000, (GSourceFunc) clock_timeout_thread, NULL);
 
     /* focus fix (source: unity-greeter) */
     GdkWindow* root_window = gdk_get_default_root_window ();
