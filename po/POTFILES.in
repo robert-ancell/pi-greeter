@@ -1,0 +1,3 @@
+src/lightdm-gtk-greeter.c
+
+src/lightdm-gtk-greeter.glade

@@ -1,0 +1,20 @@
+--- a/src/lightdm-gtk-greeter.c.original	2014-10-19 18:30:01.368000000 +0200
++++ b/src/lightdm-gtk-greeter.c	2014-10-19 18:49:46.876000000 +0200
+@@ -2803,5 +2803,16 @@
+         gdk_color_free (default_background_color);
+ #endif
+ 
++    {
++	int screen = XDefaultScreen (display);
++	Window w = RootWindow (display, screen);
++	Atom id = XInternAtom (display, "AT_SPI_BUS", True);
++	if (id != None)
++	    {
++		XDeleteProperty (display, w, id);
++		XSync (display, FALSE);
++	    }
++    }
++
+     return EXIT_SUCCESS;
+ }
+

@@ -1,0 +1,1476 @@
+2014-05-04  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update version number
+
+2014-05-02  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update NEWS
+
+2014-05-02  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merged zoomed branch
+
+2014-04-07  Thaddäus Tintenfisch  <thad.fisch@gmail.com>
+
+	Adjust interpolation type
+
+2014-04-06  Thaddäus Tintenfisch  <thad.fisch@gmail.com>
+
+	Zoom the background to fit the screen
+
+2014-05-01  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge set_session_check branch
+
+2014-05-01  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	Do not treat NULL as valid value
+
+2014-04-30  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	unnecessary changes, cleanup
+
+2014-04-30  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	set_session(): checking for invalid value
+
+2014-05-01  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-04-29  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge get_session fix, update NEWS
+
+2014-04-27  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	current_session and current_language: g_strdup/g_free fix
+
+2014-04-23  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Fix tooltips stealing the focus (LP: #1307764)
+
+2014-04-23  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	Fix: tooltips focus
+
+2014-04-17  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-04-13  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-04-12  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-03-31  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-03-30  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-03-29  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update NEWS and version number
+
+2014-03-27  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-03-26  Sean Davis  <smd.seandavis@gmail.com>
+
+	Remove translation template (managed by launchpad), Merge g_unix_signal branch with small fixes
+
+2014-03-26  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Switch from deprecated signal to g_unix_signal_add for proper greeter shutdown (LP #1290575)
+
+2014-03-21  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-03-20  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-03-19  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-03-18  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-03-17  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-03-16  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-03-15  Sean Davis  <smd.seandavis@gmail.com>
+
+	Upload translation template to fix rosetta
+
+2014-03-15  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge translations
+
+2014-03-15  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-03-15  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update translation templates
+
+2014-03-13  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update NEWS and version number
+
+2014-03-13  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-03-11  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge Guest Session text, update translation templates
+
+2014-03-02  Gunnar Hjalmarsson  <gunnarhj@ubuntu.com>
+
+	Replace the label "Guest Account" with "Guest Session".
+
+2014-03-11  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fix unclean exit, lp: 1290575
+
+2014-03-09  Sean Davis  <smd.seandavis@gmail.com>
+
+	Install sample css into doc folder
+
+2014-03-08  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update translations template
+
+2014-03-05  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-03-04  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-03-02  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update NEWS again
+
+2014-03-02  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update NEWS
+
+2014-03-02  Sean Davis  <smd.seandavis@gmail.com>
+
+	Use the system language by default (LP: #1276072).
+
+2014-03-02  Gunnar Hjalmarsson  <gunnarhj@ubuntu.com>
+
+	Use the system language by default (LP: #1276072).
+
+2014-03-02  Sean Davis  <smd.seandavis@gmail.com>
+
+	Increment version number
+
+2014-02-28  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-02-27  Sean Davis  <smd.seandavis@gmail.com>
+
+	
+	
+	Deprecate show-indicators, replace with indicators to improve upgrade path of configuration files pre-1.8 series.
+
+2014-02-25  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	Replacing "show-indicators" option with "indicators"
+
+2014-02-25  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fix segfault on uninstalled session (fixes fedora: 1002782, possibly lp: 1272910)
+
+2014-02-25  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge preselection-fix branch by thad-fisch
+
+2014-02-22  Thaddäus Tintenfisch  <thad.fisch@gmail.com>
+
+	Always update preselected session and language when another user is selected (LP #1282139)
+
+2014-02-25  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge security fix mlockall by thad-fisch
+
+2014-02-22  Thaddäus Tintenfisch  <thad.fisch@gmail.com>
+
+	Prevent memory from being swapped out
+
+2014-02-23  Sean Davis  <smd.seandavis@gmail.com>
+
+	Gtk 2/3 fix
+
+2014-02-22  Sean Davis  <smd.seandavis@gmail.com>
+
+	Remove deprecated HButtonBox, fix centering, hide clock when going into large font view
+
+2014-02-22  Sean Davis  <smd.seandavis@gmail.com>
+
+	No default label for clock, homogenous panel, hide clock if panel is too large
+
+2014-02-20  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Add a badge for elementary's pantheon session
+
+2014-02-20  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-02-16  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Revert accidental change of previous commit
+
+2014-02-16  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Let gtk_main exit and shut down the greeter properly
+
+2014-02-15  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Call the clock once at init, so that there's no empty label for 1sec
+
+2014-02-14  Sean Davis  <smd.seandavis@gmail.com>
+
+	Increase clock timeout to 1 second
+
+2014-02-14  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fix CPU hogging of the clock
+
+2014-02-12  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update NEWS and version number
+
+2014-02-12  Sean Davis  <smd.seandavis@gmail.com>
+
+	Add Enter as a means to activate the password entry from the username entry
+
+2014-02-12  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-02-11  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update version number
+
+2014-02-11  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Add sample css file to make life easier for themers
+
+2014-02-11  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update news file
+
+2014-02-09  Sean Davis  <smd.seandavis@gmail.com>
+
+	Add gtk3 style context conditional
+
+2014-02-10  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Add the lightdm-gtk-greeter style-class to all windows of the greeter so that themes can use that as an alternative to the named widgets
+
+2014-02-10  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Never allow the panel-window to be moved via the menubar (in Gtk3)
+
+2014-02-09  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fix crashed with undefined show-indicators setting
+
+2014-02-09  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Further improve Gtk2 login-window padding
+
+2014-02-09  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Fix padding-issue for login-window in Gtk2
+
+2014-02-09  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Rework widget-packing to allow more flexible theming
+
+2014-02-09  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fix loading of indicators, document indicator changes in conf template file
+
+2014-02-09  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge indicators branch from Andrew P.
+
+2014-02-08  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	Creating closure only if needed
+
+2014-02-07  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	Hotkeys to focus menubar, removing actions
+
+2014-02-04  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	"show-indicators" option - builtin indicators, sorting
+
+2014-01-29  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	Indicators update
+
+2014-02-09  Sean Davis  <smd.seandavis@gmail.com>
+
+	Restore .conf file I modified
+
+2014-02-09  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge pam-multiple-prompts branch from Christian Seiler
+
+2014-02-06  Christian Seiler  <christian@iwakd.de>
+
+	Support multiple prompts in PAM conversation rounds
+	
+	PAM allows for a single round of a conversation to contain multiple
+	prompts. Use case: if a user's password is expired, the Kerberso 5 PAM
+	module, pam_krb5, makes use of PAM's feature to supply multiple prompts
+	in order to ask the user to change their password during the
+	authentication phase (after verification of the old password).
+	
+	This patch changes the show_message_cb and show_prompt_cb signal
+	handlers to record the information in a list of pending prompts and use
+	a central processing function to display one prompt at a time to make
+	multiple prompts work properly. Additionally, for all prompts after the
+	first one, the text accompanying the prompt is used for the message
+	label (unless that has already been filled by a message), so that it is
+	clear to the user for what additional information they are asked.
+
+2014-02-09  Sean Davis  <smd.seandavis@gmail.com>
+
+	Moved badges into own directory, updated makefile to support adding badges without makefile updates
+
+2014-02-07  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Display warning in shutdown/reboot dialog, if there are still users logged in
+
+2014-02-02  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-01-27  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Fix warnings from glade-file and set frame-border to none
+
+2014-01-25  Sean Davis  <smd.seandavis@gmail.com>
+
+	Use proper hint style for full
+
+2014-01-25  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-01-23  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Merge Alt+F4 shortcut for shutdown-dialog and gtkframe as parent for user-image
+
+2014-01-22  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Pack the user-image in a frame to allow theming its border
+
+2014-01-22  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Remove extra signal handler to fix kb-shortcut/action
+
+2014-01-22  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Add Alt+F4 kb-shortcut for shutdown dialog
+	FIXME: currently the dialog has to be cancelled twice
+
+2014-01-22  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Make the screensaver-timeout configurable
+
+2014-01-22  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Set default blank-timeout to 60secs in lock-mode
+
+2014-01-22  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Reset message-label on user-change
+
+2014-01-21  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-01-20  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update version
+
+2014-01-21  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Update NEWS file
+
+2014-01-21  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Check powermenu-items at runtime (LP #1264838)
+
+2014-01-20  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update NEWS
+
+2014-01-20  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fix other gtk3.10 screens issue
+
+2014-01-20  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Merge fix by kalgasnik for offscreen-position
+
+2014-01-20  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	Fix for offscreen coordinates of login window
+
+2014-01-20  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Make the login-button the default-button
+
+2014-01-20  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fall back for no defined font name
+
+2014-01-17  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Add fallback to setting the language-menuitem
+
+2014-01-17  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Fix previous commit
+
+2014-01-17  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Convert all session-names to lower-case and add lxde badge
+
+2014-01-17  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Add badge for Xfce and fix Ubuntu session badge
+
+2014-01-16  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Use session-badges for the session-menu in Gtk3
+	document-properties remains as fallback
+
+2014-01-16  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Replace language-menu-icon with language-code-label in the panel
+
+2014-01-16  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Rename gtk3 callbacks from expose to draw to reflect signal-name
+
+2014-01-16  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Fix background drawing with Gtk2
+
+2014-01-15  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Nullify the user-background to fix behavior without fallback-wallpaper
+
+2014-01-15  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Fix deprecated gdk_display_get_n_screens call
+	(by Sean)
+
+2014-01-15  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Draw background into separate window
+	Fixes e.g. nouveau driver having trouble with the root-pixmap-bg
+	TODO: Fix background-pixmap drawing with Gtk2 (currently color-only)
+
+2014-01-14  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Fix language and session menu sensitivity for logged-in users
+
+2014-01-13  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Re/set screensaver-timeout when used as lock-screen
+
+2014-01-13  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2014-01-12  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Fix fake transparency with bg-color
+
+2014-01-10  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fix potential memory leak
+
+2014-01-10  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge fake_transparency branch
+
+2014-01-09  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Adjust fake transparency to match custom positioning of the login window
+
+2014-01-09  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Don't draw the menubar background separately (fixes highcontrast-option)
+
+2014-01-09  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Redraw the login and panel windows when the background/user is changed
+
+2014-01-08  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fix gdk_window_raise warnings
+
+2014-01-09  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Also draw panel (and menubar) with fake transparency
+	TODO: clean up and simplify drawing code, fix background refreshes/redraws on user-change
+
+2014-01-08  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Clean up Gtk2/3 callbacks and fix crash
+
+2014-01-08  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Use cairo to draw fake transparency underneath the rounded corners in Gtk3
+
+2014-01-09  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge Ali's clockleak branch
+
+2014-01-09  Alistair Buxton  <a.j.buxton@gmail.com>
+
+	Fix a memory leak in the clock timeout function.
+
+2014-01-08  Sean Davis  <smd.seandavis@gmail.com>
+
+	Reduce redundancy with setting the displayed user, improve tooltip for guest and other
+
+2014-01-07  Sean Davis  <smd.seandavis@gmail.com>
+
+	Cleanup warnings
+
+2014-01-07  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fix value setting/unsetting warnings
+
+2014-01-07  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update NEWS
+
+2014-01-07  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update changelog, lp: 1266449 fixed
+
+2014-01-07  Sean Davis  <smd.seandavis@gmail.com>
+
+	Use g_strcmp0 everywhere
+
+2014-01-07  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Additional definition of the password-entry as invisible in glade-file (Fixes LP #1264771)
+
+2014-01-07  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Correctly display when session is locked (Fix LP #1264563)
+
+2014-01-05  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Apply border-radius property to login_window and the shutdown/restart-dialog in Gtk3
+
+2013-12-31  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-12-27  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fix debian #718497 Last PAM error message not showing
+
+2013-12-27  Sean Davis  <smd.seandavis@gmail.com>
+
+	Increase clock string buffer to 50 characters to fix Debian bug #721510
+
+2013-12-27  Sean Davis  <smd.seandavis@gmail.com>
+
+	Add missed bug fixes
+
+2013-12-27  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update version and NEWS
+
+2013-12-26  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update translations
+
+2013-12-26  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge focus_fix branch
+
+2013-12-18  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	Fixed: focus-only-under-mouse bug. Gtk2 version
+
+2013-12-17  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	Fixed: focus-only-under-mouse bug
+
+2013-12-26  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge default_avatar_option branch
+
+2013-12-23  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	New option: "default-user-image"
+
+2013-12-20  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-12-12  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge user_switching branch
+
+2013-12-02  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	password_entry/username_entry: user switching with Up/Down keys
+
+2013-12-12  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge power_dialog_fixes branch
+
+2013-12-02  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	Power dialogs: centering fixed (broken by "position" option), "escape" press now treats as cancel.
+
+2013-12-07  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-11-30  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fix GTK2 build
+
+2013-11-30  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge keyboard_spawn_fix branch
+
+2013-11-30  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	Using 'g_child_watch_add' to handle keyboard terminating event
+
+2013-11-29  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge background-fixes branch
+
+2013-11-23  Alistair Buxton  <a.j.buxton@gmail.com>
+
+	Fix the rest of the pixmap leaks.
+
+2013-11-23  Alistair Buxton  <a.j.buxton@gmail.com>
+
+	Indentation fixes only.
+
+2013-11-23  Alistair Buxton  <a.j.buxton@gmail.com>
+
+	Implement use of ESETROOT and _XROOTPMAP_ID
+	
+	This prevents the leaking of X client connections every time
+	the background is changed.
+
+2013-11-20  Alistair Buxton  <a.j.buxton@gmail.com>
+
+	Defer set_background() until we know which image to use.
+
+2013-11-19  Alistair Buxton  <a.j.buxton@gmail.com>
+
+	Only call XForceScreenSaver once, from main()
+
+2013-11-29  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge Onboard-xembed branch
+
+2013-11-24  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	Run 'onboard' in xembed mode
+
+2013-11-29  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge Hotkeys branch
+
+2013-11-28  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	Hotkeys for a11y menu
+
+2013-11-29  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge positioning branch
+
+2013-11-28  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	Position option: different default anchors for +/- coordinates
+
+2013-11-24  Andrew P.  <pan.pav.7c5@gmail.com>
+
+	New option: main window position
+
+2013-11-20  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-11-18  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Fix typo in language-selection-callback
+
+2013-11-13  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Remove the half-hearted libxss dependency check
+
+2013-11-13  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Blank the screen when the greeter is used as unlock-dialog
+
+2013-11-07  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-10-30  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fix Greeter doesn't select user's last session when using Other (lp: #1031421), thanks corsac for the patch!
+
+2013-10-30  Sean Davis  <smd.seandavis@gmail.com>
+
+	Add support for enter key to validate login entry (lp: #1231134)
+
+2013-10-17  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-10-02  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-09-24  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Properly hide languagemenu-menuitem if it's disabled in the config (Fixes LP: #1191509)
+
+2013-09-22  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-09-21  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-09-17  Sean Davis  <smd.seandavis@gmail.com>
+
+	Bump version details
+
+2013-09-17  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fix not a prototype error
+
+2013-09-16  Sean Davis  <smd.seandavis@gmail.com>
+
+	Push ochosi's login fix
+
+2013-06-20  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-06-19  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-06-04  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-06-03  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge translations
+
+2013-06-02  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-06-03  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update notes and version
+
+2013-06-01  Sean Davis  <smd.seandavis@gmail.com>
+
+	Add widget name back to infobar
+
+2013-06-01  Sean Davis  <smd.seandavis@gmail.com>
+
+	Cleanup unused row in login window
+
+2013-06-01  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fix centering with GTK+3
+
+2013-06-01  Sean Davis  <smd.seandavis@gmail.com>
+
+	GTK+2 infobar compatability
+
+2013-05-27  Sean Davis  <smd.seandavis@gmail.com>
+
+	Center infobar contents
+
+2013-05-27  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Drop name of message_label widget so it gets themed by InfoBar
+
+2013-05-26  Sean Davis  <smd.seandavis@gmail.com>
+
+	Add menubar name back to systray
+
+2013-05-26  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Give the infobar-widget a name for theming compatibility
+
+2013-05-26  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Pack the message_label in a gtk-infobar
+
+2013-05-26  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Fix warnings
+
+2013-05-21  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-05-19  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Add tooltip on user-combobox that shows username
+
+2013-05-18  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-05-13  Sean Davis  <smd.seandavis@gmail.com>
+
+	Cleanup conf file
+
+2013-05-13  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update version number for release
+
+2013-05-12  Sean Davis  <smd.seandavis@gmail.com>
+
+	Change shutdown and restart cancel button to Cancel
+
+2013-05-12  Sean Davis  <smd.seandavis@gmail.com>
+
+	Set name for return to login button to cancel_button, rename logo to user_image
+
+2013-05-12  Sean Davis  <smd.seandavis@gmail.com>
+
+	Name shutdown and restart buttons
+
+2013-05-12  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update NEWS
+
+2013-05-12  Sean Davis  <smd.seandavis@gmail.com>
+
+	make update-po
+
+2013-05-12  Sean Davis  <smd.seandavis@gmail.com>
+
+	Rename menubar and shutdown/restart widgets, improve dialog code a bit
+
+2013-05-11  Sean Davis  <smd.seandavis@gmail.com>
+
+	Some initial cleanup, improve variable names, standardize spacing
+
+2013-05-10  Sean Davis  <smd.seandavis@gmail.com>
+
+	Do not automatically show keyboard
+
+2013-05-10  Simon Steinbeiss  <ochosi@shimmerproject.org>
+
+	Re-add widget-names to glade file to allow proper theming
+
+2013-05-10  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-05-09  Sean Davis  <smd.seandavis@gmail.com>
+
+	Translations update merge
+
+2013-05-09  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-05-09  Sean Davis  <smd.seandavis@gmail.com>
+
+	Allow proper positioning of onboard keyboard
+
+2013-05-08  Sean Davis  <smd.seandavis@gmail.com>
+
+	Add initial support for on-screen keyboard
+
+2013-05-08  Sean Davis  <smd.seandavis@gmail.com>
+
+	Update changelog, make update-po
+
+2013-05-07  Sean Davis  <smd.seandavis@gmail.com>
+
+	Replace Shutdown/shutdown strings in po files to make translations stay the same.
+
+2013-05-07  Sean Davis  <smd.seandavis@gmail.com>
+
+	Use Shut Down instead of shutdown
+
+2013-05-07  Sean Davis  <smd.seandavis@gmail.com>
+
+	Add primary/secondary text and padding to shutdown/restart dialogs
+
+2013-05-07  Sean Davis  <smd.seandavis@gmail.com>
+
+	Use zoom for wallpaper scaling, use non-symbolic restart/shutdown icons for GTK2
+
+2013-05-06  Sean Davis  <smd.seandavis@gmail.com>
+
+	Add login window theming and icons to shutdown and restart.
+
+2013-04-26  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-03-24  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-03-21  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-03-17  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge lp:~smd-seandavis/lightdm-gtk-greeter/ui-refresh
+
+2013-03-17  Sean Davis  <smd.seandavis@gmail.com>
+
+	Add default clock settings.
+
+2013-03-17  Sean Davis  <smd.seandavis@gmail.com>
+
+	Clean up theme template
+
+2013-03-17  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fix tab order, include panel menubar in tab order
+
+2013-03-17  Sean Davis  <smd.seandavis@gmail.com>
+
+	Use menubar styling across panel by default
+
+2013-03-17  Sean Davis  <smd.seandavis@gmail.com>
+
+	Use symbolic icons, hide resize grip on panel window.
+
+2013-03-15  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fix GTK+2 compatability.
+
+2013-03-15  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fallback on first user if previous user is not found.
+
+2013-03-15  Sean Davis  <smd.seandavis@gmail.com>
+
+	Cleanup and make other login operable.
+
+2013-03-15  Sean Davis  <smd.seandavis@gmail.com>
+
+	Add username entry for other.
+
+2013-03-15  Sean Davis  <smd.seandavis@gmail.com>
+
+	Make menu items sensitive when not logged in
+
+2013-03-15  Sean Davis  <smd.seandavis@gmail.com>
+
+	Add configuration for clock
+
+2013-03-15  Sean Davis  <smd.seandavis@gmail.com>
+
+	Remove deprecated gdk_thread functions from gtk3 code.
+
+2013-03-15  Sean Davis  <smd.seandavis@gmail.com>
+
+	Add x-padding to the hostname
+
+2013-03-14  Sean Davis  <smd.seandavis@gmail.com>
+
+	Addition of basic clock.
+
+2013-03-14  Sean Davis  <smd.seandavis@gmail.com>
+
+	Add support for gtk2 compilation, but current implementation crashes with gtk2
+
+2013-03-14  Sean Davis  <smd.seandavis@gmail.com>
+
+	Code cleanup, get rid of useless boxes as well.
+
+2013-03-14  Sean Davis  <smd.seandavis@gmail.com>
+
+	Simplify and improve user avatar loading.
+
+2013-03-14  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fix menu callbacks
+
+2013-03-14  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fixed menus
+
+2013-03-14  Sean Davis  <smd.seandavis@gmail.com>
+
+	Simplify loops, fix language code.
+
+2013-03-14  Sean Davis  <smd.seandavis@gmail.com>
+
+	Almost there, but this commit does not load session.
+
+2013-03-13  Sean Davis  <smd.seandavis@gmail.com>
+
+	Remove references to non-existent widgets, add hostname label back.
+
+2013-03-13  Sean Davis  <smd.seandavis@gmail.com>
+
+	Fix bad merge
+
+2013-03-13  Sean Davis  <smd.seandavis@gmail.com>
+
+	Merge ochosi branch
+
+2013-02-06  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Add rounded corners to the loginbox, clean up the glade file, move the session- and language-combos to menus
+	TODO: clean up dropped widgets from .c (prompt_box, login_box), make session- and language-menu work as they should (modify callbacks)
+
+2013-02-01  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Scale the avatar to 64x64px
+
+2013-02-01  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Load logo-widget from builder to actually be able to show avatar
+
+2013-01-31  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Update glade file and add avatar-support to the greeter
+
+2013-03-14  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Add todo-list for upcoming UI changes
+
+2013-03-09  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-03-01  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Add rounded corners to the login_window widget
+
+2013-02-18  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-02-10  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Merge 78..81 from 1.6
+
+2013-02-10  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-02-10  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Update NEWS for a missing item and fix a typo
+
+2013-02-10  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Reintroduce gtk2 support
+	
+	With a configure flag (--with-gtk2). This will also switch to the gtk2 build
+	of libindicator.
+	
+	Based on a patch received during FOSDEM… I think.
+
+2013-02-09  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Slightly improve user avatar handling
+
+2013-02-09  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Make update-po
+
+2013-02-09  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Fix incomplete previous commit
+
+2013-02-02  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Change button-label from 'Login' to 'Log In'
+
+2013-02-02  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Add support for the user-avatar
+
+2013-02-02  Simon Steinbeiß  <ochosi@shimmerproject.org>
+
+	Fix background-display when picture has no alpha channel (LP: #1086199)
+
+2013-01-30  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-01-29  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	update po
+
+2013-01-29  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Update po
+	
+	(I'm fairly sure launchpad is going to overwrite everything tonight, isn't that funny)
+
+2013-01-29  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Compile-in the glade file
+	
+	(so that a missing ui file won't crash the greeter anymore)
+	
+	Also improve a bit the autofoo stuff
+
+2013-01-28  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Make indicators actually show up in the top panel
+
+2013-01-28  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	IndicatorObjectEntry is not a GObject, so do the same as indicator-applet
+
+2013-01-28  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	resync changelog with current dev release
+
+2013-01-28  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Add experimental libindicator support
+	
+	(untested due to a lack of Ubuntu system for now :)
+
+2013-01-25  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2013-01-24  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-12-19  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-10-29  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-10-22  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	drop useless rule
+
+2012-10-22  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Generate a proper changelog during dist
+
+2012-10-22  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Fix previous commit
+
+2012-10-21  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Add basic support for user background
+
+2012-10-21  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Use new api for autologin
+
+2012-09-05  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-09-03  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-08-31  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-08-30  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Prepare 1.3.1
+
+2012-08-30  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	update fr.po
+
+2012-08-30  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	make update-po
+
+2012-08-30  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Force refreshing the prompt_box for "Other" after cancel is pressed
+	
+	(so the ui isn't stuck with a broken password prompt when it should be the
+	username prompt)
+
+2012-08-30  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Hide the Cancel button, useless with the normal combobox
+	
+	(it's still displayed when the user list is disabled or when "Other" is selected)
+
+2012-08-30  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Don't hide the login box when cancel is pressed
+
+2012-08-30  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Rename the 'Login' button to 'Unlock' when the user is already logged in
+
+2012-08-30  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Drop custom icons now that there's a config option for the icon theme
+
+2012-08-30  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Fix FTBFS when built twice in a row
+
+2012-08-23  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Prepare 1.3.0
+
+2012-08-23  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	refresh po/LINGUAS, useless lp doesn't do it
+
+2012-08-23  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	remove duplicated comment
+
+2012-08-05  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-07-31  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	remember the last session used
+
+2012-07-31  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	use a known icon name for the accessibility menu
+
+2012-07-31  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	add config option to set the icon theme
+
+2012-07-31  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Add a config option to set the path to the logo image
+
+2012-07-31  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	include patch from the ubuntu package
+
+2012-07-28  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Replace the userlist's treeview with a combobox
+	
+	And drop the unused pixbuf
+
+2012-07-28  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Add names to widgets to ease theming
+
+2012-07-28  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Properly center the login window after a resize
+	
+	(Thanks Esko Järnfors for the patch)
+
+2012-07-28  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Revert "Add the possibilty to specify another greeter.ui path in the configuration file"
+	
+	We're discussing a better method to make both lubuntu and xubuntu happy with that.
+
+2012-07-23  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-07-15  Julien Lavergne  <gilir@ubuntu.com>
+
+	Add the possibilty to specify another greeter.ui path in the configuration file
+
+2012-07-15  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-07-14  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-05-29  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-05-21  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	Prepare for 1.1.6
+
+2012-05-21  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	add missing include for setlocale
+
+2012-05-21  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	fix Cancel button action, and clear the error label
+
+2012-05-21  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	fix 'Large Font' option for fontnames containing spaces
+
+2012-05-13  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-04-27  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-04-22  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-04-21  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-04-05  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-04-04  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-04-03  Lionel Le Folgoc  <mrpouit@ubuntu.com>
+
+	prepare for 1.1.5
+
+2012-03-23  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-03-21  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-03-20  Launchpad Translations on behalf of lightdm-gtk-greeter-team
+
+	Launchpad automatic translations update.
+
+2012-02-10  Robert Ancell  <robert.ancell@canonical.com>
+
+	Releasing 1.1.4
+
+2012-02-10  Robert Ancell  <robert.ancell@canonical.com>
+
+	Load greeter configuration from correct directory
+
+2012-02-01  Robert Ancell  <robert.ancell@canonical.com>
+
+	Bump version number
+
+2012-02-01  Robert Ancell  <robert.ancell@canonical.com>
+
+	Fix greeter looking for data in the wrong directory
+
+2012-01-31  Robert Ancell  <robert.ancell@canonical.com>
+
+	Bump version number
+
+2012-01-31  Robert Ancell  <robert.ancell@canonical.com>
+
+	Remove deprecated GTK+ functions
+
+2012-01-31  Robert Ancell  <robert.ancell@canonical.com>
+
+	Correctly link against libX11
+
+2012-01-12  Robert Ancell  <robert.ancell@canonical.com>
+
+	Releasing 1.1.1
+
+2012-01-12  Robert Ancell  <robert.ancell@canonical.com>
+
+	Translate login prompts using the translations from PAM
+
+2012-01-06  Gunnar Hjalmarsson  <ubuntu@gunnar.cc>
+
+	Enable translation of prompt_label (LP: #897166).
+
+2011-11-29  Gunnar Hjalmarsson  <ubuntu@gunnar.cc>
+
+	Language chooser modifications:
+	* Handle @variants properly.
+	* Prevent locales from appearing twice in the language chooser.
+
+2011-11-29  Robert Ancell  <robert.ancell@canonical.com>
+
+	Update translation files removing translations that were not part of the GTK greeter
+
+2011-11-29  Robert Ancell  <robert.ancell@canonical.com>
+
+	Add LINGUAS file
+
+2011-11-29  Robert Ancell  <robert.ancell@canonical.com>
+
+	Copy over translations
+
+2011-11-29  Robert Ancell  <robert.ancell@canonical.com>
+
+	Split lightdm-gtk-greeter out of lightdm
+

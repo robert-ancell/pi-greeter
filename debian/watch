@@ -1,0 +1,4 @@
+version=3
+opts=pgpsigurlmangle=s/$/.asc/ \
+https://launchpad.net/lightdm-gtk-greeter/+download \
+https://launchpad.net/lightdm-gtk-greeter/.*/lightdm-gtk-greeter-(\d\.\d\.\d)\.tar\.(?:gz|bz2)

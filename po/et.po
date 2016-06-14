@@ -1,0 +1,120 @@
+# Estonian translation for lightdm
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the lightdm package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: lightdm\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-03-15 17:37-0400\n"
+"PO-Revision-Date: 2014-04-12 03:48+0000\n"
+"Last-Translator: Marko Silluste <marko.silluste@hot.ee>\n"
+"Language-Team: Estonian <et@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2014-05-01 06:31+0000\n"
+"X-Generator: Launchpad (build 16985)\n"
+"Language: et\n"
+
+#: ../src/lightdm-gtk-greeter.c:708
+msgid "Unlock"
+msgstr "Lukusta lahti"
+
+#: ../src/lightdm-gtk-greeter.c:710 ../src/lightdm-gtk-greeter.glade.h:8
+msgid "Log In"
+msgstr "Logi sisse"
+
+#: ../src/lightdm-gtk-greeter.c:1079
+msgid "Failed to start session"
+msgstr "Sessiooni alustamine ebaõnnestus"
+
+#: ../src/lightdm-gtk-greeter.c:1254
+msgid "Other"
+msgstr "Teised"
+
+#: ../src/lightdm-gtk-greeter.c:1266 ../src/lightdm-gtk-greeter.c:1852
+msgid "Guest Session"
+msgstr "Külalisseanss"
+
+#: ../src/lightdm-gtk-greeter.c:1479
+msgid "Incorrect password, please try again"
+msgstr "Vale parool, palun proovi uuesti!"
+
+#: ../src/lightdm-gtk-greeter.c:1483
+msgid "Failed to authenticate"
+msgstr "Autentimine ebaõnnestus"
+
+#: ../src/lightdm-gtk-greeter.c:1526
+#, c-format
+msgid "Warning: There are still %d users logged in."
+msgstr "Hoiatus: Seal on ikkagi %d kasutajaid sees."
+
+#: ../src/lightdm-gtk-greeter.c:1528
+#, c-format
+msgid "Warning: There is still %d user logged in."
+msgstr "Hoiatus: Seal on ikkagi %d kasutaja sees."
+
+#: ../src/lightdm-gtk-greeter.c:1540 ../src/lightdm-gtk-greeter.glade.h:9
+msgid "Cancel"
+msgstr "Loobu"
+
+#: ../src/lightdm-gtk-greeter.c:1579
+msgid "Restart"
+msgstr "Taaskäivita"
+
+#: ../src/lightdm-gtk-greeter.c:1579
+msgid "Are you sure you want to close all programs and restart the computer?"
+msgstr ""
+"Kas oled kindel, et tahad kõik programmid sulgeda ja arvuti taaskäivitada?"
+
+#: ../src/lightdm-gtk-greeter.c:1594
+msgid "Shut Down"
+msgstr "Lülita välja"
+
+#: ../src/lightdm-gtk-greeter.c:1594
+msgid ""
+"Are you sure you want to close all programs and shut down the computer?"
+msgstr ""
+"Kas oled kindel, et tahad kõik programmid sulgeda ja arvuti välja lülitada?"
+
+#: ../src/lightdm-gtk-greeter.c:1860
+msgid "Other..."
+msgstr "Muu..."
+
+#: ../src/lightdm-gtk-greeter.c:2513 ../src/lightdm-gtk-greeter.c:2520
+msgid "Enter your password"
+msgstr "Sisesta oma parool"
+
+#: ../src/lightdm-gtk-greeter.c:2514 ../src/lightdm-gtk-greeter.c:2521
+msgid "Enter your username"
+msgstr "Sisesta oma kasutajanimi"
+
+#: ../src/lightdm-gtk-greeter.glade.h:1
+msgid "Suspend"
+msgstr "Uinak"
+
+#: ../src/lightdm-gtk-greeter.glade.h:2
+msgid "Hibernate"
+msgstr "Talveuni"
+
+#: ../src/lightdm-gtk-greeter.glade.h:3
+msgid "Restart..."
+msgstr "Taaskäivita..."
+
+#: ../src/lightdm-gtk-greeter.glade.h:4
+msgid "Shut Down..."
+msgstr "Väljalülitamine..."
+
+#: ../src/lightdm-gtk-greeter.glade.h:5
+msgid "Large Font"
+msgstr "Suur kiri"
+
+#: ../src/lightdm-gtk-greeter.glade.h:6
+msgid "High Contrast"
+msgstr "Kõrge kontrast"
+
+#: ../src/lightdm-gtk-greeter.glade.h:7
+msgid "On Screen Keyboard"
+msgstr "Ekraaniklaviatuur"
