@@ -346,7 +346,7 @@
                     <signal name="clicked" handler="login_cb" swapped="no"/>
                   </object>
                   <packing>
-                    <property name="expand">False</property>
+                    <property name="expand">True</property>
                     <property name="fill">True</property>
                     <property name="pack_type">end</property>
                     <property name="position">0</property>
@@ -362,7 +362,7 @@
                     <signal name="clicked" handler="cancel_cb" swapped="no"/>
                   </object>
                   <packing>
-                    <property name="expand">False</property>
+                    <property name="expand">True</property>
                     <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
