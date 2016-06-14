@@ -51,8 +51,6 @@
 
 #include <lightdm.h>
 
-#include <src/lightdm-gtk-greeter-ui.h>
-
 static LightDMGreeter *greeter;
 static GKeyFile *state;
 static gchar *state_filename;
@@ -2426,13 +2424,7 @@ main (int argc, char **argv)
     g_free (value);
 
     builder = gtk_builder_new ();
-    if (!gtk_builder_add_from_string (builder, lightdm_gtk_greeter_ui,
-                                      lightdm_gtk_greeter_ui_length, &error))
-    {
-        g_warning ("Error loading UI: %s", error->message);
-        return EXIT_FAILURE;
-    }
-    g_clear_error (&error);
+	gtk_builder_add_from_file (builder, GREETER_DATA_DIR "/pi-greeter.glade", NULL);
     
     /* Panel */
     panel_window = GTK_WINDOW (gtk_builder_get_object (builder, "panel_window"));

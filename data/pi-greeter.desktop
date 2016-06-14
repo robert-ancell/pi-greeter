@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=LightDM Pi Greeter
+Comment=This runs the Pi greeter, it should only be run from LightDM
+Exec=pi-greeter
+Type=Application
+X-Ubuntu-Gettext-Domain=lightdm

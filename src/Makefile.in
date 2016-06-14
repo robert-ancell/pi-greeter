@@ -78,7 +78,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-sbin_PROGRAMS = lightdm-gtk-greeter$(EXEEXT)
+sbin_PROGRAMS = pi-greeter$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/depcomp
@@ -95,23 +95,19 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(sbindir)"
 PROGRAMS = $(sbin_PROGRAMS)
-am__objects_1 =
-am_lightdm_gtk_greeter_OBJECTS = $(am__objects_1) \
-	lightdm_gtk_greeter-lightdm-gtk-greeter.$(OBJEXT)
-lightdm_gtk_greeter_OBJECTS = $(am_lightdm_gtk_greeter_OBJECTS)
+am_pi_greeter_OBJECTS = pi_greeter-pi-greeter.$(OBJEXT)
+pi_greeter_OBJECTS = $(am_pi_greeter_OBJECTS)
 am__DEPENDENCIES_1 =
-lightdm_gtk_greeter_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+pi_greeter_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-lightdm_gtk_greeter_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
-	$(lightdm_gtk_greeter_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
-	$(LDFLAGS) -o $@
+pi_greeter_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(pi_greeter_CFLAGS) \
+	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -146,8 +142,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(lightdm_gtk_greeter_SOURCES)
-DIST_SOURCES = $(lightdm_gtk_greeter_SOURCES)
+SOURCES = $(pi_greeter_SOURCES)
+DIST_SOURCES = $(pi_greeter_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -332,25 +328,21 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-lightdm_gtk_greeter_built_sources = \
-	lightdm-gtk-greeter-ui.h
-
-lightdm_gtk_greeter_SOURCES = \
-	$(lightdm_gtk_greeter_built_sources) \
-	lightdm-gtk-greeter.c
+pi_greeter_SOURCES = \
+	pi-greeter.c
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-DHAVE_CONFIG_H \
 	-DGETTEXT_PACKAGE=\"$(GETTEXT_PACKAGE)\" \
 	-DLOCALEDIR=\""$(localedir)"\" \
-	-DGREETER_DATA_DIR=\""$(datadir)/lightdm-gtk-greeter"\" \
-	-DCONFIG_FILE=\""$(sysconfdir)/lightdm/lightdm-gtk-greeter.conf"\" \
+	-DGREETER_DATA_DIR=\""$(datadir)/pi-greeter"\" \
+	-DCONFIG_FILE=\""$(sysconfdir)/lightdm/pi-greeter.conf"\" \
 	-DINDICATOR_DIR=\""$(INDICATORDIR)"\" \
 	-DUNITY_INDICATOR_DIR=\""$(UNITY_INDICATORDIR)"\" \
 	$(WARN_CFLAGS)
 
-lightdm_gtk_greeter_CFLAGS = \
+pi_greeter_CFLAGS = \
 	$(GTK_CFLAGS) \
 	$(GMODULE_CFLAGS) \
 	$(GTHREAD_CFLAGS) \
@@ -359,7 +351,7 @@ lightdm_gtk_greeter_CFLAGS = \
 	$(LIBINDICATOR_CFLAGS) \
 	$(LIBIDO_CFLAGS)
 
-lightdm_gtk_greeter_LDADD = \
+pi_greeter_LDADD = \
 	$(GTK_LIBS) \
 	$(GMODULE_LIBS) \
 	$(GTHREAD_LIBS) \
@@ -369,13 +361,10 @@ lightdm_gtk_greeter_LDADD = \
 	$(LIBIDO_LIBS)
 
 @MAINTAINER_MODE_TRUE@DISTCLEANFILES = \
-@MAINTAINER_MODE_TRUE@	$(lightdm_gtk_greeter_built_sources)
+@MAINTAINER_MODE_TRUE@	$(pi_greeter_built_sources)
 
 @MAINTAINER_MODE_TRUE@BUILT_SOURCES = \
-@MAINTAINER_MODE_TRUE@	$(lightdm_gtk_greeter_built_sources)
-
-EXTRA_DIST = \
-	lightdm-gtk-greeter.glade
+@MAINTAINER_MODE_TRUE@	$(pi_greeter_built_sources)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -462,9 +451,9 @@ clean-sbinPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
-lightdm-gtk-greeter$(EXEEXT): $(lightdm_gtk_greeter_OBJECTS) $(lightdm_gtk_greeter_DEPENDENCIES) $(EXTRA_lightdm_gtk_greeter_DEPENDENCIES) 
-	@rm -f lightdm-gtk-greeter$(EXEEXT)
-	$(AM_V_CCLD)$(lightdm_gtk_greeter_LINK) $(lightdm_gtk_greeter_OBJECTS) $(lightdm_gtk_greeter_LDADD) $(LIBS)
+pi-greeter$(EXEEXT): $(pi_greeter_OBJECTS) $(pi_greeter_DEPENDENCIES) $(EXTRA_pi_greeter_DEPENDENCIES) 
+	@rm -f pi-greeter$(EXEEXT)
+	$(AM_V_CCLD)$(pi_greeter_LINK) $(pi_greeter_OBJECTS) $(pi_greeter_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -472,7 +461,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lightdm_gtk_greeter-lightdm-gtk-greeter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pi_greeter-pi-greeter.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -495,19 +484,19 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
 
-lightdm_gtk_greeter-lightdm-gtk-greeter.o: lightdm-gtk-greeter.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lightdm_gtk_greeter_CFLAGS) $(CFLAGS) -MT lightdm_gtk_greeter-lightdm-gtk-greeter.o -MD -MP -MF $(DEPDIR)/lightdm_gtk_greeter-lightdm-gtk-greeter.Tpo -c -o lightdm_gtk_greeter-lightdm-gtk-greeter.o `test -f 'lightdm-gtk-greeter.c' || echo '$(srcdir)/'`lightdm-gtk-greeter.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/lightdm_gtk_greeter-lightdm-gtk-greeter.Tpo $(DEPDIR)/lightdm_gtk_greeter-lightdm-gtk-greeter.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='lightdm-gtk-greeter.c' object='lightdm_gtk_greeter-lightdm-gtk-greeter.o' libtool=no @AMDEPBACKSLASH@
+pi_greeter-pi-greeter.o: pi-greeter.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pi_greeter_CFLAGS) $(CFLAGS) -MT pi_greeter-pi-greeter.o -MD -MP -MF $(DEPDIR)/pi_greeter-pi-greeter.Tpo -c -o pi_greeter-pi-greeter.o `test -f 'pi-greeter.c' || echo '$(srcdir)/'`pi-greeter.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pi_greeter-pi-greeter.Tpo $(DEPDIR)/pi_greeter-pi-greeter.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='pi-greeter.c' object='pi_greeter-pi-greeter.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lightdm_gtk_greeter_CFLAGS) $(CFLAGS) -c -o lightdm_gtk_greeter-lightdm-gtk-greeter.o `test -f 'lightdm-gtk-greeter.c' || echo '$(srcdir)/'`lightdm-gtk-greeter.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pi_greeter_CFLAGS) $(CFLAGS) -c -o pi_greeter-pi-greeter.o `test -f 'pi-greeter.c' || echo '$(srcdir)/'`pi-greeter.c
 
-lightdm_gtk_greeter-lightdm-gtk-greeter.obj: lightdm-gtk-greeter.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lightdm_gtk_greeter_CFLAGS) $(CFLAGS) -MT lightdm_gtk_greeter-lightdm-gtk-greeter.obj -MD -MP -MF $(DEPDIR)/lightdm_gtk_greeter-lightdm-gtk-greeter.Tpo -c -o lightdm_gtk_greeter-lightdm-gtk-greeter.obj `if test -f 'lightdm-gtk-greeter.c'; then $(CYGPATH_W) 'lightdm-gtk-greeter.c'; else $(CYGPATH_W) '$(srcdir)/lightdm-gtk-greeter.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/lightdm_gtk_greeter-lightdm-gtk-greeter.Tpo $(DEPDIR)/lightdm_gtk_greeter-lightdm-gtk-greeter.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='lightdm-gtk-greeter.c' object='lightdm_gtk_greeter-lightdm-gtk-greeter.obj' libtool=no @AMDEPBACKSLASH@
+pi_greeter-pi-greeter.obj: pi-greeter.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pi_greeter_CFLAGS) $(CFLAGS) -MT pi_greeter-pi-greeter.obj -MD -MP -MF $(DEPDIR)/pi_greeter-pi-greeter.Tpo -c -o pi_greeter-pi-greeter.obj `if test -f 'pi-greeter.c'; then $(CYGPATH_W) 'pi-greeter.c'; else $(CYGPATH_W) '$(srcdir)/pi-greeter.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pi_greeter-pi-greeter.Tpo $(DEPDIR)/pi_greeter-pi-greeter.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='pi-greeter.c' object='pi_greeter-pi-greeter.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lightdm_gtk_greeter_CFLAGS) $(CFLAGS) -c -o lightdm_gtk_greeter-lightdm-gtk-greeter.obj `if test -f 'lightdm-gtk-greeter.c'; then $(CYGPATH_W) 'lightdm-gtk-greeter.c'; else $(CYGPATH_W) '$(srcdir)/lightdm-gtk-greeter.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pi_greeter_CFLAGS) $(CFLAGS) -c -o pi_greeter-pi-greeter.obj `if test -f 'pi-greeter.c'; then $(CYGPATH_W) 'pi-greeter.c'; else $(CYGPATH_W) '$(srcdir)/pi-greeter.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -725,9 +714,6 @@ uninstall-am: uninstall-sbinPROGRAMS
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags tags-am uninstall uninstall-am uninstall-sbinPROGRAMS
 
-
-@MAINTAINER_MODE_TRUE@lightdm-gtk-greeter-ui.h: $(srcdir)/lightdm-gtk-greeter.glade Makefile
-@MAINTAINER_MODE_TRUE@	$(AM_V_GEN) exo-csource --static --strip-comments --strip-content --name=lightdm_gtk_greeter_ui $< >$@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
