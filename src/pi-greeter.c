@@ -54,7 +54,6 @@ static gchar *state_filename;
 /* Defaults */
 static gchar *default_font_name, *default_theme_name, *default_icon_theme_name;
 static GdkPixbuf *default_background_pixbuf = NULL;
-static GdkPixbuf *background_pixbuf = NULL;
 
 /* Panel Widgets */
 static GtkWidget *menubar, *power_menuitem, *session_menuitem, *language_menuitem;
@@ -88,6 +87,7 @@ static GdkColor *default_background_color = NULL;
 static gboolean cancelling = FALSE, prompted = FALSE;
 static gboolean prompt_active = FALSE, password_prompted = FALSE;
 static GdkRegion *window_region = NULL;
+static gchar *wp_mode = NULL;
 
 typedef struct
 {
@@ -825,9 +825,19 @@ background_window_expose (GtkWidget    *widget,
                                        GdkEventExpose *event,
                                        gpointer user_data)
 {
-    cairo_t *cr = gdk_cairo_create (gtk_widget_get_window (widget));
-    if (background_pixbuf)
-        gdk_cairo_set_source_pixbuf (cr, background_pixbuf, 0, 0);
+    GdkWindow *wd = gtk_widget_get_window (widget);
+    cairo_t *cr = gdk_cairo_create (wd);
+    if (default_background_pixbuf)
+    {
+        int wd_w = gdk_window_get_width (wd);
+        int wd_h = gdk_window_get_height (wd);
+        int pb_w = gdk_pixbuf_get_width (default_background_pixbuf);
+        int pb_h = gdk_pixbuf_get_height (default_background_pixbuf);
+        gdk_cairo_set_source_color (cr, default_background_color);
+        cairo_rectangle (cr, 0, 0, wd_w, wd_h);
+        cairo_fill (cr);
+        gdk_cairo_set_source_pixbuf (cr, default_background_pixbuf, (wd_w - pb_w) / 2, (wd_h - pb_h) / 2);
+    }
     else
         gdk_cairo_set_source_color (cr, default_background_color);
     cairo_paint (cr);
@@ -1794,6 +1804,63 @@ set_background (GdkPixbuf *new_bg)
     else
         bg = default_background_pixbuf;
 
+#if 0
+        cache->bg = gdk_pixmap_new(window, dest_w, dest_h, -1);
+        cr = gdk_cairo_create(cache->bg);
+
+        if(gdk_pixbuf_get_has_alpha(pix)
+            || desktop->conf.wallpaper_mode == FM_WP_CENTER
+            || desktop->conf.wallpaper_mode == FM_WP_FIT)
+        {
+            gdk_cairo_set_source_color(cr, &desktop->conf.desktop_bg);
+            cairo_rectangle(cr, 0, 0, dest_w, dest_h);
+            cairo_fill(cr);
+        }
+
+        switch(desktop->conf.wallpaper_mode)
+        {
+        case FM_WP_TILE:
+            break;
+        case FM_WP_STRETCH:
+        case FM_WP_SCREEN:
+            if(dest_w == src_w && dest_h == src_h)
+                scaled = (GdkPixbuf*)g_object_ref(pix);
+            else
+                scaled = gdk_pixbuf_scale_simple(pix, dest_w, dest_h, GDK_INTERP_BILINEAR);
+            g_object_unref(pix);
+            pix = scaled;
+            break;
+        case FM_WP_FIT:
+        case FM_WP_CROP:
+            if(dest_w != src_w || dest_h != src_h)
+            {
+                gdouble w_ratio = (float)dest_w / src_w;
+                gdouble h_ratio = (float)dest_h / src_h;
+                gdouble ratio = (desktop->conf.wallpaper_mode == FM_WP_FIT)
+                    ? MIN(w_ratio, h_ratio)
+                    : MAX(w_ratio, h_ratio);
+                if(ratio != 1.0)
+                {
+                    src_w *= ratio;
+                    src_h *= ratio;
+                    scaled = gdk_pixbuf_scale_simple(pix, src_w, src_h, GDK_INTERP_BILINEAR);
+                    g_object_unref(pix);
+                    pix = scaled;
+                }
+            }
+            /* continue to execute code in case FM_WP_CENTER */
+        case FM_WP_CENTER:
+            x = (dest_w - src_w)/2;
+            y = (dest_h - src_h)/2;
+            break;
+        case FM_WP_COLOR: ; /* handled above */
+        }
+        gdk_cairo_set_source_pixbuf(cr, pix, x, y);
+        cairo_paint(cr);
+        cairo_destroy(cr);
+        cache->wallpaper_mode = desktop->conf.wallpaper_mode;
+#endif
+
     #if GDK_VERSION_CUR_STABLE < G_ENCODE_VERSION(3, 10)
         num_screens = gdk_display_get_n_screens (gdk_display_get_default ());
     #endif
@@ -1813,6 +1880,10 @@ set_background (GdkPixbuf *new_bg)
         for (monitor = 0; monitor < gdk_screen_get_n_monitors (screen); monitor++)
         {
             gdk_screen_get_monitor_geometry (screen, monitor, &monitor_geometry);
+
+            gdk_cairo_set_source_color(c, default_background_color);
+            cairo_rectangle(c, 0, 0, monitor_geometry.width, monitor_geometry.height);
+            cairo_fill(c);
 
             if (bg)
             {
@@ -1835,6 +1906,9 @@ set_background (GdkPixbuf *new_bg)
                     offset_y = (monitor_geometry.height - (p_height * scale)) / 2;
                 }
 
+                scale = 1.0; //!!!!
+                offset_x = (monitor_geometry.width - (p_width * scale)) / 2;  //!!!!
+                offset_y = (monitor_geometry.height - (p_height * scale)) / 2; //!!!!
                 p = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, gdk_pixbuf_get_bits_per_sample (bg),
                                     monitor_geometry.width, monitor_geometry.height);
 
@@ -1845,21 +1919,16 @@ set_background (GdkPixbuf *new_bg)
                     interp_type = GDK_INTERP_BILINEAR;
 
                 /* Zoom the background pixbuf to fit the screen */
-                gdk_pixbuf_composite (bg, p, 0, 0, monitor_geometry.width, monitor_geometry.height,
-                                      offset_x, offset_y, scale, scale, interp_type, 255);
+                //gdk_pixbuf_composite (bg, p, 0, 0, monitor_geometry.width, monitor_geometry.height,
+                //                      offset_x, offset_y, scale, scale, interp_type, 255);
 
-                gdk_cairo_set_source_pixbuf (c, p, monitor_geometry.x, monitor_geometry.y);
-
-                /* Make the background pixbuf globally accessible so it can be reused for fake transparency */
-                if (background_pixbuf)
-                    g_object_unref (background_pixbuf);
-
-                background_pixbuf = p;
+                //gdk_cairo_set_source_pixbuf (c, p, monitor_geometry.x, monitor_geometry.y);
+                gdk_cairo_set_source_pixbuf (c, bg, offset_x, offset_y); //!!!!
             }
             else
             {
                 gdk_cairo_set_source_color (c, default_background_color);
-                background_pixbuf = NULL;
+                //background_pixbuf = NULL;
             }
             cairo_paint (c);
             iter = g_slist_nth (backgrounds, monitor);
@@ -1958,7 +2027,7 @@ focus_upon_map (GdkXEvent *gxevent, GdkEvent *event, gpointer  data)
 int
 main (int argc, char **argv)
 {
-    GKeyFile *config;
+    GKeyFile *config, *userconf;
     GdkRectangle monitor_geometry;
     GtkBuilder *builder;
     GtkCellRenderer *renderer;
@@ -2031,33 +2100,46 @@ main (int argc, char **argv)
     /* Set default cursor */
     gdk_window_set_cursor (gdk_get_default_root_window (), gdk_cursor_new (GDK_LEFT_PTR));
 
-    /* Load background */
-    value = g_key_file_get_value (config, "greeter", "background", NULL);
-    if (!value)
-        value = g_strdup ("#000000");
-    if (!gdk_color_parse (value, &background_color))
+    /* Create the pcmanfm config file path */
+    gchar *user, *session;
+    user = g_key_file_get_value (config, "greeter", "user", NULL);
+    session = g_key_file_get_value (config, "greeter", "session", NULL);
+    gchar buffer[256];
+    sprintf (buffer, "/home/%s/.config/pcmanfm/%s/desktop-items-0.conf", user, session);
+    userconf = g_key_file_new ();
+    g_key_file_load_from_file (userconf, buffer, G_KEY_FILE_NONE, &error);
+    if (error && !g_error_matches (error, G_FILE_ERROR, G_FILE_ERROR_NOENT))
+        g_warning ("Failed to load user configuration from %s: %s\n", buffer, error->message);
+    g_clear_error (&error);
+
+    /* Get background colour from pcmanfm settings */
+    value = g_key_file_get_value (userconf, "*", "desktop_bg", NULL);
+    if (!value || !gdk_color_parse (value, &background_color))
+            gdk_color_parse ("#C0C0C0", &background_color);
+    if (value) g_free (value);
+    default_background_color = gdk_color_copy (&background_color);
+
+    /* Get background image from pcmanfm settings */
+    value = g_key_file_get_value (userconf, "*", "wallpaper", NULL);
+    if (value)
     {
-        gchar *path;
         GError *error = NULL;
-
-        if (g_path_is_absolute (value))
-            path = g_strdup (value);
-        else
-            path = g_build_filename (GREETER_DATA_DIR, value, NULL);
-
-        g_debug ("Loading background %s", path);
-        default_background_pixbuf = gdk_pixbuf_new_from_file (path, &error);
+        g_debug ("Loading background %s", value);
+        default_background_pixbuf = gdk_pixbuf_new_from_file (value, &error);
         if (!default_background_pixbuf)
             g_warning ("Failed to load background: %s", error->message);
         g_clear_error (&error);
-        g_free (path);
+        g_free (value);
     }
-    else
+
+    /* Get display mode from pcmanfm settings */
+    value = g_key_file_get_value (userconf, "*", "wallpaper-mode", NULL);
+    if (value)
     {
-        g_debug ("Using background color %s", value);
-        default_background_color = gdk_color_copy (&background_color);
+        wp_mode = g_strdup (value);
+        g_free (value);
     }
-    g_free (value);
+    else wp_mode = g_strdup ("color");
 
     /* Make the greeter behave a bit more like a screensaver if used as un/lock-screen by blanking the screen */
     gchar* end_ptr = NULL;
@@ -2221,7 +2303,7 @@ main (int argc, char **argv)
             gtk_window_move (GTK_WINDOW(window), monitor_geometry.x, monitor_geometry.y);
 
             backgrounds = g_slist_prepend(backgrounds, window);
-            gtk_widget_show (window);
+            //gtk_widget_show (window);
             g_signal_connect (G_OBJECT (window), "expose-event", G_CALLBACK (background_window_expose), NULL);
             gtk_widget_queue_draw (GTK_WIDGET(window));
         }
@@ -2293,8 +2375,6 @@ main (int argc, char **argv)
     }
 #endif
 
-    if (background_pixbuf)
-        g_object_unref (background_pixbuf);
     if (default_background_pixbuf)
         g_object_unref (default_background_pixbuf);
     if (default_background_color)
