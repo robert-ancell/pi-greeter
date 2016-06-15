@@ -1152,7 +1152,7 @@ static void set_displayed_user (LightDMGreeter *greeter, gchar *username)
     else
     {
         gtk_widget_hide (GTK_WIDGET (username_entry));
-        gtk_widget_hide (GTK_WIDGET (cancel_button));
+        gtk_widget_show (GTK_WIDGET (cancel_button));
         gtk_widget_grab_focus (GTK_WIDGET (password_entry));
         user_tooltip = g_strdup(username);
     }
@@ -1309,7 +1309,8 @@ G_MODULE_EXPORT
 void
 cancel_cb (GtkWidget *widget)
 {
-    cancel_authentication ();
+    //cancel_authentication ();
+    lightdm_shutdown (NULL);
 }
 
 static void
@@ -2271,7 +2272,7 @@ main (int argc, char **argv)
     {
         /* This also sets the background to user's */
         load_user_list ();
-        gtk_widget_hide (GTK_WIDGET (cancel_button));
+        gtk_widget_show (GTK_WIDGET (cancel_button));
         gtk_widget_show (GTK_WIDGET (user_combo));
     }
 
