@@ -825,6 +825,7 @@ background_window_expose (GtkWidget    *widget,
                                        GdkEventExpose *event,
                                        gpointer user_data)
 {
+    return FALSE;
     GdkWindow *wd = gtk_widget_get_window (widget);
     cairo_t *cr = gdk_cairo_create (wd);
     if (default_background_pixbuf)
@@ -1804,63 +1805,6 @@ set_background (GdkPixbuf *new_bg)
     else
         bg = default_background_pixbuf;
 
-#if 0
-        cache->bg = gdk_pixmap_new(window, dest_w, dest_h, -1);
-        cr = gdk_cairo_create(cache->bg);
-
-        if(gdk_pixbuf_get_has_alpha(pix)
-            || desktop->conf.wallpaper_mode == FM_WP_CENTER
-            || desktop->conf.wallpaper_mode == FM_WP_FIT)
-        {
-            gdk_cairo_set_source_color(cr, &desktop->conf.desktop_bg);
-            cairo_rectangle(cr, 0, 0, dest_w, dest_h);
-            cairo_fill(cr);
-        }
-
-        switch(desktop->conf.wallpaper_mode)
-        {
-        case FM_WP_TILE:
-            break;
-        case FM_WP_STRETCH:
-        case FM_WP_SCREEN:
-            if(dest_w == src_w && dest_h == src_h)
-                scaled = (GdkPixbuf*)g_object_ref(pix);
-            else
-                scaled = gdk_pixbuf_scale_simple(pix, dest_w, dest_h, GDK_INTERP_BILINEAR);
-            g_object_unref(pix);
-            pix = scaled;
-            break;
-        case FM_WP_FIT:
-        case FM_WP_CROP:
-            if(dest_w != src_w || dest_h != src_h)
-            {
-                gdouble w_ratio = (float)dest_w / src_w;
-                gdouble h_ratio = (float)dest_h / src_h;
-                gdouble ratio = (desktop->conf.wallpaper_mode == FM_WP_FIT)
-                    ? MIN(w_ratio, h_ratio)
-                    : MAX(w_ratio, h_ratio);
-                if(ratio != 1.0)
-                {
-                    src_w *= ratio;
-                    src_h *= ratio;
-                    scaled = gdk_pixbuf_scale_simple(pix, src_w, src_h, GDK_INTERP_BILINEAR);
-                    g_object_unref(pix);
-                    pix = scaled;
-                }
-            }
-            /* continue to execute code in case FM_WP_CENTER */
-        case FM_WP_CENTER:
-            x = (dest_w - src_w)/2;
-            y = (dest_h - src_h)/2;
-            break;
-        case FM_WP_COLOR: ; /* handled above */
-        }
-        gdk_cairo_set_source_pixbuf(cr, pix, x, y);
-        cairo_paint(cr);
-        cairo_destroy(cr);
-        cache->wallpaper_mode = desktop->conf.wallpaper_mode;
-#endif
-
     #if GDK_VERSION_CUR_STABLE < G_ENCODE_VERSION(3, 10)
         num_screens = gdk_display_get_n_screens (gdk_display_get_default ());
     #endif
@@ -1889,47 +1833,59 @@ set_background (GdkPixbuf *new_bg)
             {
                 p_width = gdk_pixbuf_get_width (bg);
                 p_height = gdk_pixbuf_get_height (bg);
+                scale_x = (float) monitor_geometry.width / p_width;
+                scale_y = (float) monitor_geometry.height / p_height;
 
-                scale_x = (gdouble)monitor_geometry.width / p_width;
-                scale_y = (gdouble)monitor_geometry.height / p_height;
-
-                if (scale_x < scale_y)
+                if (!strcmp (wp_mode, "center"))
                 {
-                    scale = scale_y;
-                    offset_x = (monitor_geometry.width - (p_width * scale)) / 2;
-                    offset_y = 0;
+                    offset_x = (monitor_geometry.width - p_width) / 2;
+                    offset_y = (monitor_geometry.height - p_height) / 2;
+                    p = gdk_pixbuf_scale_simple (bg, p_width, p_height, GDK_INTERP_NEAREST);
                 }
-                else
-                {
-                    scale = scale_x;
-                    offset_x = 0;
-                    offset_y = (monitor_geometry.height - (p_height * scale)) / 2;
-                }
-
-                scale = 1.0; //!!!!
-                offset_x = (monitor_geometry.width - (p_width * scale)) / 2;  //!!!!
-                offset_y = (monitor_geometry.height - (p_height * scale)) / 2; //!!!!
-                p = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, gdk_pixbuf_get_bits_per_sample (bg),
-                                    monitor_geometry.width, monitor_geometry.height);
-
-                /* Set interpolation type */
-                if (monitor_geometry.width == p_width && monitor_geometry.height == p_height)
-                    interp_type = GDK_INTERP_NEAREST;
-                else
-                    interp_type = GDK_INTERP_BILINEAR;
-
-                /* Zoom the background pixbuf to fit the screen */
-                //gdk_pixbuf_composite (bg, p, 0, 0, monitor_geometry.width, monitor_geometry.height,
-                //                      offset_x, offset_y, scale, scale, interp_type, 255);
-
-                //gdk_cairo_set_source_pixbuf (c, p, monitor_geometry.x, monitor_geometry.y);
-                gdk_cairo_set_source_pixbuf (c, bg, offset_x, offset_y); //!!!!
+	            else if (!strcmp (wp_mode, "fit"))
+	            {
+                    if (scale_x < scale_y)
+                    {
+                        scale = scale_x;
+                        offset_x = 0;
+                        offset_y = (monitor_geometry.height - (p_height * scale)) / 2;
+                    }
+                    else
+                    {
+                        scale = scale_y;
+                        offset_x = (monitor_geometry.width - (p_width * scale)) / 2;
+                        offset_y = 0;
+                    }
+                    p = gdk_pixbuf_scale_simple (bg, p_width * scale, p_height * scale, GDK_INTERP_BILINEAR);
+	            }
+	            else if (!strcmp (wp_mode, "crop"))
+	            {
+                    if (scale_x < scale_y)
+                    {
+                        scale = scale_y;
+                        offset_x = (monitor_geometry.width - (p_width * scale)) / 2;
+                        offset_y = 0;
+                    }
+                    else
+                    {
+                        scale = scale_x;
+                        offset_x = 0;
+                        offset_y = (monitor_geometry.height - (p_height * scale)) / 2;
+                    }
+                    p = gdk_pixbuf_scale_simple (bg, p_width * scale, p_height * scale, GDK_INTERP_BILINEAR);
+	            }
+	            else if (!strcmp (wp_mode, "stretch"))
+	            {
+	                offset_x = offset_y = 0;
+                    p = gdk_pixbuf_scale_simple (bg, monitor_geometry.width, monitor_geometry.height, GDK_INTERP_BILINEAR);
+	            }
+	            else if (!strcmp (wp_mode, "tile"))
+	            {
+	                //!!!!!!
+	            }
+                gdk_cairo_set_source_pixbuf (c, p, offset_x, offset_y);
             }
-            else
-            {
-                gdk_cairo_set_source_color (c, default_background_color);
-                //background_pixbuf = NULL;
-            }
+            else gdk_cairo_set_source_color (c, default_background_color);
             cairo_paint (c);
             iter = g_slist_nth (backgrounds, monitor);
             gtk_widget_queue_draw (GTK_WIDGET (iter->data));
@@ -2133,7 +2089,7 @@ main (int argc, char **argv)
     }
 
     /* Get display mode from pcmanfm settings */
-    value = g_key_file_get_value (userconf, "*", "wallpaper-mode", NULL);
+    value = g_key_file_get_value (userconf, "*", "wallpaper_mode", NULL);
     if (value)
     {
         wp_mode = g_strdup (value);
