@@ -1795,9 +1795,8 @@ set_background (GdkPixbuf *new_bg)
     GdkRectangle monitor_geometry;
     GdkPixbuf *bg = NULL, *p = NULL;
     GSList *iter;
-    gint i, p_height, p_width, offset_x, offset_y;
+    gint i, p_height, p_width, offset_x = 0, offset_y = 0;
     gdouble scale_x, scale_y, scale;
-    GdkInterpType interp_type;
     gint num_screens = 1;
 
     if (new_bg)
@@ -1829,7 +1828,7 @@ set_background (GdkPixbuf *new_bg)
             cairo_rectangle(c, 0, 0, monitor_geometry.width, monitor_geometry.height);
             cairo_fill(c);
 
-            if (bg)
+            if (bg && strcmp (wp_mode, "color"))
             {
                 p_width = gdk_pixbuf_get_width (bg);
                 p_height = gdk_pixbuf_get_height (bg);
@@ -1840,21 +1839,19 @@ set_background (GdkPixbuf *new_bg)
                 {
                     offset_x = (monitor_geometry.width - p_width) / 2;
                     offset_y = (monitor_geometry.height - p_height) / 2;
-                    p = gdk_pixbuf_scale_simple (bg, p_width, p_height, GDK_INTERP_NEAREST);
+                    p = gdk_pixbuf_copy (bg);
                 }
 	            else if (!strcmp (wp_mode, "fit"))
 	            {
                     if (scale_x < scale_y)
                     {
                         scale = scale_x;
-                        offset_x = 0;
                         offset_y = (monitor_geometry.height - (p_height * scale)) / 2;
                     }
                     else
                     {
                         scale = scale_y;
                         offset_x = (monitor_geometry.width - (p_width * scale)) / 2;
-                        offset_y = 0;
                     }
                     p = gdk_pixbuf_scale_simple (bg, p_width * scale, p_height * scale, GDK_INTERP_BILINEAR);
 	            }
@@ -1864,26 +1861,24 @@ set_background (GdkPixbuf *new_bg)
                     {
                         scale = scale_y;
                         offset_x = (monitor_geometry.width - (p_width * scale)) / 2;
-                        offset_y = 0;
                     }
                     else
                     {
                         scale = scale_x;
-                        offset_x = 0;
                         offset_y = (monitor_geometry.height - (p_height * scale)) / 2;
                     }
                     p = gdk_pixbuf_scale_simple (bg, p_width * scale, p_height * scale, GDK_INTERP_BILINEAR);
 	            }
 	            else if (!strcmp (wp_mode, "stretch"))
 	            {
-	                offset_x = offset_y = 0;
                     p = gdk_pixbuf_scale_simple (bg, monitor_geometry.width, monitor_geometry.height, GDK_INTERP_BILINEAR);
 	            }
 	            else if (!strcmp (wp_mode, "tile"))
 	            {
-	                //!!!!!!
+                    p = gdk_pixbuf_copy (bg);
 	            }
                 gdk_cairo_set_source_pixbuf (c, p, offset_x, offset_y);
+                if (!strcmp (wp_mode, "tile")) cairo_pattern_set_extend (cairo_get_source (c), CAIRO_EXTEND_REPEAT);
             }
             else gdk_cairo_set_source_color (c, default_background_color);
             cairo_paint (c);
