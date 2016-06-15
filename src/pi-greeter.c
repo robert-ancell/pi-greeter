@@ -806,7 +806,7 @@ cairo_region_from_rectangle (gint width, gint height, gint radius)
 static gboolean
 login_window_size_allocate (GtkWidget *widget, GdkRectangle *allocation, gpointer user_data)
 {
-    gint    radius = 10;
+    gint    radius = 2;
 
     GdkWindow *window = gtk_widget_get_window (widget);
     if (window_region)
@@ -2029,7 +2029,7 @@ main (int argc, char **argv)
         g_warning ("Failed to load configuration from %s: %s\n", CONFIG_FILE, error->message);
     g_clear_error (&error);
 
-    state_dir = g_build_filename (g_get_user_cache_dir (), "lightdm-gtk-greeter", NULL);
+    state_dir = g_build_filename (g_get_user_cache_dir (), "pi-greeter", NULL);
     g_mkdir_with_parents (state_dir, 0775);
     state_filename = g_build_filename (state_dir, "state", NULL);
     g_free (state_dir);
@@ -2140,21 +2140,21 @@ main (int argc, char **argv)
         g_object_set (gtk_settings_get_default (), "gtk-font-name", value, NULL);
     }
     g_object_get (gtk_settings_get_default (), "gtk-font-name", &default_font_name, NULL);  
-    value = g_key_file_get_value (config, "greeter", "xft-dpi", NULL);
-    if (value)
-        g_object_set (gtk_settings_get_default (), "gtk-xft-dpi", (int) (1024 * atof (value)), NULL);
-    value = g_key_file_get_value (config, "greeter", "xft-antialias", NULL);
-    if (value)
-        g_object_set (gtk_settings_get_default (), "gtk-xft-antialias", g_strcmp0 (value, "true") == 0, NULL);
-    g_free (value);
-    value = g_key_file_get_value (config, "greeter", "xft-hintstyle", NULL);
-    if (value)
-        g_object_set (gtk_settings_get_default (), "gtk-xft-hintstyle", value, NULL);
-    g_free (value);
-    value = g_key_file_get_value (config, "greeter", "xft-rgba", NULL);
-    if (value)
-        g_object_set (gtk_settings_get_default (), "gtk-xft-rgba", value, NULL);
-    g_free (value);
+    //value = g_key_file_get_value (config, "greeter", "xft-dpi", NULL);
+    //if (value)
+    //    g_object_set (gtk_settings_get_default (), "gtk-xft-dpi", (int) (1024 * atof (value)), NULL);
+    //value = g_key_file_get_value (config, "greeter", "xft-antialias", NULL);
+    //if (value)
+    //    g_object_set (gtk_settings_get_default (), "gtk-xft-antialias", g_strcmp0 (value, "true") == 0, NULL);
+    //g_free (value);
+    //value = g_key_file_get_value (config, "greeter", "xft-hintstyle", NULL);
+    //if (value)
+    //    g_object_set (gtk_settings_get_default (), "gtk-xft-hintstyle", value, NULL);
+    //g_free (value);
+    //value = g_key_file_get_value (config, "greeter", "xft-rgba", NULL);
+    //if (value)
+    //    g_object_set (gtk_settings_get_default (), "gtk-xft-rgba", value, NULL);
+    //g_free (value);
     
     /* Get a11y on screen keyboard command*/
     gint argp;
@@ -2229,7 +2229,7 @@ main (int argc, char **argv)
     renderer = gtk_cell_renderer_text_new();
     gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (user_combo), renderer, TRUE);
     gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (user_combo), renderer, "text", 1);
-    gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (user_combo), renderer, "weight", 2);
+    //gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (user_combo), renderer, "weight", 2);
 
     #if GDK_VERSION_CUR_STABLE < G_ENCODE_VERSION(3, 10)
         numScreens = gdk_display_get_n_screens (gdk_display_get_default());
