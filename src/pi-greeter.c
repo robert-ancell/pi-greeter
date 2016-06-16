@@ -820,28 +820,81 @@ login_window_size_allocate (GtkWidget *widget, GdkRectangle *allocation, gpointe
     return TRUE;
 }
 
+
+static void draw_background (cairo_t *c, gint m_width, gint m_height)
+{
+    GdkPixbuf *p;
+    gint p_height, p_width, offset_x = 0, offset_y = 0;
+    gdouble scale_x, scale_y, scale;
+
+    gdk_cairo_set_source_color (c, default_background_color);
+    cairo_rectangle (c, 0, 0, m_width, m_height);
+    cairo_fill (c);
+
+    if (default_background_pixbuf && strcmp (wp_mode, "color"))
+    {
+        p_width = gdk_pixbuf_get_width (default_background_pixbuf);
+        p_height = gdk_pixbuf_get_height (default_background_pixbuf);
+        scale_x = (float) m_width / p_width;
+        scale_y = (float) m_height / p_height;
+
+        if (!strcmp (wp_mode, "center"))
+        {
+            offset_x = (m_width - p_width) / 2;
+            offset_y = (m_height - p_height) / 2;
+            p = gdk_pixbuf_copy (default_background_pixbuf);
+        }
+        else if (!strcmp (wp_mode, "fit"))
+        {
+            if (scale_x < scale_y)
+            {
+                scale = scale_x;
+                offset_y = (m_height - (p_height * scale)) / 2;
+            }
+            else
+            {
+                scale = scale_y;
+                offset_x = (m_width - (p_width * scale)) / 2;
+            }
+            p = gdk_pixbuf_scale_simple (default_background_pixbuf, p_width * scale, p_height * scale, GDK_INTERP_BILINEAR);
+        }
+        else if (!strcmp (wp_mode, "crop"))
+        {
+            if (scale_x < scale_y)
+            {
+                scale = scale_y;
+                offset_x = (m_width - (p_width * scale)) / 2;
+            }
+            else
+            {
+                scale = scale_x;
+                offset_y = (m_height - (p_height * scale)) / 2;
+            }
+            p = gdk_pixbuf_scale_simple (default_background_pixbuf, p_width * scale, p_height * scale, GDK_INTERP_BILINEAR);
+        }
+        else if (!strcmp (wp_mode, "stretch"))
+        {
+            p = gdk_pixbuf_scale_simple (default_background_pixbuf, m_width, m_height, GDK_INTERP_BILINEAR);
+        }
+        else if (!strcmp (wp_mode, "tile"))
+        {
+            p = gdk_pixbuf_copy (default_background_pixbuf);
+        }
+        gdk_cairo_set_source_pixbuf (c, p, offset_x, offset_y);
+        if (!strcmp (wp_mode, "tile")) cairo_pattern_set_extend (cairo_get_source (c), CAIRO_EXTEND_REPEAT);
+    }
+    else gdk_cairo_set_source_color (c, default_background_color);
+    cairo_paint (c);
+}
+
 static gboolean
 background_window_expose (GtkWidget    *widget,
                                        GdkEventExpose *event,
                                        gpointer user_data)
 {
-    return FALSE;
     GdkWindow *wd = gtk_widget_get_window (widget);
     cairo_t *cr = gdk_cairo_create (wd);
-    if (default_background_pixbuf)
-    {
-        int wd_w = gdk_window_get_width (wd);
-        int wd_h = gdk_window_get_height (wd);
-        int pb_w = gdk_pixbuf_get_width (default_background_pixbuf);
-        int pb_h = gdk_pixbuf_get_height (default_background_pixbuf);
-        gdk_cairo_set_source_color (cr, default_background_color);
-        cairo_rectangle (cr, 0, 0, wd_w, wd_h);
-        cairo_fill (cr);
-        gdk_cairo_set_source_pixbuf (cr, default_background_pixbuf, (wd_w - pb_w) / 2, (wd_h - pb_h) / 2);
-    }
-    else
-        gdk_cairo_set_source_color (cr, default_background_color);
-    cairo_paint (cr);
+    draw_background (cr, gdk_window_get_width (wd), gdk_window_get_height (wd));
     return FALSE;
 }
 
@@ -1824,65 +1877,7 @@ set_background (GdkPixbuf *new_bg)
         for (monitor = 0; monitor < gdk_screen_get_n_monitors (screen); monitor++)
         {
             gdk_screen_get_monitor_geometry (screen, monitor, &monitor_geometry);
-
-            gdk_cairo_set_source_color(c, default_background_color);
-            cairo_rectangle(c, 0, 0, monitor_geometry.width, monitor_geometry.height);
-            cairo_fill(c);
-
-            if (bg && strcmp (wp_mode, "color"))
-            {
-                p_width = gdk_pixbuf_get_width (bg);
-                p_height = gdk_pixbuf_get_height (bg);
-                scale_x = (float) monitor_geometry.width / p_width;
-                scale_y = (float) monitor_geometry.height / p_height;
-
-                if (!strcmp (wp_mode, "center"))
-                {
-                    offset_x = (monitor_geometry.width - p_width) / 2;
-                    offset_y = (monitor_geometry.height - p_height) / 2;
-                    p = gdk_pixbuf_copy (bg);
-                }
-	            else if (!strcmp (wp_mode, "fit"))
-	            {
-                    if (scale_x < scale_y)
-                    {
-                        scale = scale_x;
-                        offset_y = (monitor_geometry.height - (p_height * scale)) / 2;
-                    }
-                    else
-                    {
-                        scale = scale_y;
-                        offset_x = (monitor_geometry.width - (p_width * scale)) / 2;
-                    }
-                    p = gdk_pixbuf_scale_simple (bg, p_width * scale, p_height * scale, GDK_INTERP_BILINEAR);
-	            }
-	            else if (!strcmp (wp_mode, "crop"))
-	            {
-                    if (scale_x < scale_y)
-                    {
-                        scale = scale_y;
-                        offset_x = (monitor_geometry.width - (p_width * scale)) / 2;
-                    }
-                    else
-                    {
-                        scale = scale_x;
-                        offset_y = (monitor_geometry.height - (p_height * scale)) / 2;
-                    }
-                    p = gdk_pixbuf_scale_simple (bg, p_width * scale, p_height * scale, GDK_INTERP_BILINEAR);
-	            }
-	            else if (!strcmp (wp_mode, "stretch"))
-	            {
-                    p = gdk_pixbuf_scale_simple (bg, monitor_geometry.width, monitor_geometry.height, GDK_INTERP_BILINEAR);
-	            }
-	            else if (!strcmp (wp_mode, "tile"))
-	            {
-                    p = gdk_pixbuf_copy (bg);
-	            }
-                gdk_cairo_set_source_pixbuf (c, p, offset_x, offset_y);
-                if (!strcmp (wp_mode, "tile")) cairo_pattern_set_extend (cairo_get_source (c), CAIRO_EXTEND_REPEAT);
-            }
-            else gdk_cairo_set_source_color (c, default_background_color);
-            cairo_paint (c);
+            draw_background (c, monitor_geometry.width, monitor_geometry.height);
             iter = g_slist_nth (backgrounds, monitor);
             gtk_widget_queue_draw (GTK_WIDGET (iter->data));
         }
@@ -2255,7 +2250,7 @@ main (int argc, char **argv)
             gtk_window_move (GTK_WINDOW(window), monitor_geometry.x, monitor_geometry.y);
 
             backgrounds = g_slist_prepend(backgrounds, window);
-            //gtk_widget_show (window);
+            gtk_widget_show (window);
             g_signal_connect (G_OBJECT (window), "expose-event", G_CALLBACK (background_window_expose), NULL);
             gtk_widget_queue_draw (GTK_WIDGET(window));
         }
