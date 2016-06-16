@@ -838,35 +838,29 @@ static void draw_background (cairo_t *c, GdkPixbuf *bg, gint m_width, gint m_hei
         scale_x = (float) m_width / p_width;
         scale_y = (float) m_height / p_height;
 
-        if (!strcmp (wp_mode, "center"))
+        if (!strcmp (wp_mode, "tile")) p = gdk_pixbuf_copy (bg);
+        else
         {
+            if (!strcmp (wp_mode, "fit"))
+            {
+                p_width *= scale_y < scale_x ? scale_y : scale_x;
+                p_height *= scale_y < scale_x ? scale_y : scale_x;
+            }
+            else if (!strcmp (wp_mode, "crop"))
+            {
+                p_width *= scale_x < scale_y ? scale_y : scale_x;
+                p_height *= scale_x < scale_y ? scale_y : scale_x;
+            }
+            else if (!strcmp (wp_mode, "stretch"))
+            {
+                p_width = m_width;
+                p_height = m_height;
+            }
             offset_x = (m_width - p_width) / 2;
             offset_y = (m_height - p_height) / 2;
-            p = gdk_pixbuf_copy (bg);
-        }
-        else if (!strcmp (wp_mode, "fit"))
-        {
-            p_width *= scale_y < scale_x ? scale_y : scale_x;
-            p_height *= scale_y < scale_x ? scale_y : scale_x;
-            offset_x = (m_width - p_width) / 2;
-            offset_y = (m_height - p_height) / 2;
-            p = gdk_pixbuf_scale_simple (bg, p_width, p_height, GDK_INTERP_BILINEAR);
-        }
-        else if (!strcmp (wp_mode, "crop"))
-        {
-            p_width *= scale_x < scale_y ? scale_y : scale_x;
-            p_height *= scale_x < scale_y ? scale_y : scale_x;
-            offset_x = (m_width - p_width) / 2;
-            offset_y = (m_height - p_height) / 2;
-            p = gdk_pixbuf_scale_simple (bg, p_width, p_height, GDK_INTERP_BILINEAR);
-        }
-        else if (!strcmp (wp_mode, "stretch"))
-        {
-            p = gdk_pixbuf_scale_simple (bg, m_width, m_height, GDK_INTERP_BILINEAR);
-        }
-        else if (!strcmp (wp_mode, "tile"))
-        {
-            p = gdk_pixbuf_copy (bg);
+            if (gdk_pixbuf_get_width (bg) == m_width && gdk_pixbuf_get_height (bg) == m_height)
+                p = gdk_pixbuf_copy (bg);
+            else p = gdk_pixbuf_scale_simple (bg, p_width, p_height, GDK_INTERP_BILINEAR);
         }
         gdk_cairo_set_source_pixbuf (c, p, offset_x, offset_y);
         if (!strcmp (wp_mode, "tile")) cairo_pattern_set_extend (cairo_get_source (c), CAIRO_EXTEND_REPEAT);
