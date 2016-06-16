@@ -2072,7 +2072,8 @@ main (int argc, char **argv)
     {
         GError *error = NULL;
         g_debug ("Loading background %s", value);
-        default_background_pixbuf = gdk_pixbuf_new_from_file (value, &error);
+        // Need to add an alpha channel here to make redraw work properly...
+        default_background_pixbuf = gdk_pixbuf_add_alpha (gdk_pixbuf_new_from_file (value, &error), FALSE, 0, 0, 0);
         if (!default_background_pixbuf)
             g_warning ("Failed to load background: %s", error->message);
         g_clear_error (&error);
