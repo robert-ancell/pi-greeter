@@ -821,20 +821,20 @@ login_window_size_allocate (GtkWidget *widget, GdkRectangle *allocation, gpointe
 }
 
 
-static void draw_background (cairo_t *c, gint m_width, gint m_height)
+static void draw_background (cairo_t *c, GdkPixbuf *bg, gint m_width, gint m_height)
 {
-    GdkPixbuf *p;
+    GdkPixbuf *p = NULL;
     gint p_height, p_width, offset_x = 0, offset_y = 0;
-    gdouble scale_x, scale_y, scale;
+    gdouble scale_x, scale_y;
 
     gdk_cairo_set_source_color (c, default_background_color);
     cairo_rectangle (c, 0, 0, m_width, m_height);
     cairo_fill (c);
 
-    if (default_background_pixbuf && strcmp (wp_mode, "color"))
+    if (bg && strcmp (wp_mode, "color"))
     {
-        p_width = gdk_pixbuf_get_width (default_background_pixbuf);
-        p_height = gdk_pixbuf_get_height (default_background_pixbuf);
+        p_width = gdk_pixbuf_get_width (bg);
+        p_height = gdk_pixbuf_get_height (bg);
         scale_x = (float) m_width / p_width;
         scale_y = (float) m_height / p_height;
 
@@ -842,43 +842,31 @@ static void draw_background (cairo_t *c, gint m_width, gint m_height)
         {
             offset_x = (m_width - p_width) / 2;
             offset_y = (m_height - p_height) / 2;
-            p = gdk_pixbuf_copy (default_background_pixbuf);
+            p = gdk_pixbuf_copy (bg);
         }
         else if (!strcmp (wp_mode, "fit"))
         {
-            if (scale_x < scale_y)
-            {
-                scale = scale_x;
-                offset_y = (m_height - (p_height * scale)) / 2;
-            }
-            else
-            {
-                scale = scale_y;
-                offset_x = (m_width - (p_width * scale)) / 2;
-            }
-            p = gdk_pixbuf_scale_simple (default_background_pixbuf, p_width * scale, p_height * scale, GDK_INTERP_BILINEAR);
+            p_width *= scale_y < scale_x ? scale_y : scale_x;
+            p_height *= scale_y < scale_x ? scale_y : scale_x;
+            offset_x = (m_width - p_width) / 2;
+            offset_y = (m_height - p_height) / 2;
+            p = gdk_pixbuf_scale_simple (bg, p_width, p_height, GDK_INTERP_BILINEAR);
         }
         else if (!strcmp (wp_mode, "crop"))
         {
-            if (scale_x < scale_y)
-            {
-                scale = scale_y;
-                offset_x = (m_width - (p_width * scale)) / 2;
-            }
-            else
-            {
-                scale = scale_x;
-                offset_y = (m_height - (p_height * scale)) / 2;
-            }
-            p = gdk_pixbuf_scale_simple (default_background_pixbuf, p_width * scale, p_height * scale, GDK_INTERP_BILINEAR);
+            p_width *= scale_x < scale_y ? scale_y : scale_x;
+            p_height *= scale_x < scale_y ? scale_y : scale_x;
+            offset_x = (m_width - p_width) / 2;
+            offset_y = (m_height - p_height) / 2;
+            p = gdk_pixbuf_scale_simple (bg, p_width, p_height, GDK_INTERP_BILINEAR);
         }
         else if (!strcmp (wp_mode, "stretch"))
         {
-            p = gdk_pixbuf_scale_simple (default_background_pixbuf, m_width, m_height, GDK_INTERP_BILINEAR);
+            p = gdk_pixbuf_scale_simple (bg, m_width, m_height, GDK_INTERP_BILINEAR);
         }
         else if (!strcmp (wp_mode, "tile"))
         {
-            p = gdk_pixbuf_copy (default_background_pixbuf);
+            p = gdk_pixbuf_copy (bg);
         }
         gdk_cairo_set_source_pixbuf (c, p, offset_x, offset_y);
         if (!strcmp (wp_mode, "tile")) cairo_pattern_set_extend (cairo_get_source (c), CAIRO_EXTEND_REPEAT);
@@ -894,7 +882,7 @@ background_window_expose (GtkWidget    *widget,
 {
     GdkWindow *wd = gtk_widget_get_window (widget);
     cairo_t *cr = gdk_cairo_create (wd);
-    draw_background (cr, gdk_window_get_width (wd), gdk_window_get_height (wd));
+    draw_background (cr, default_background_pixbuf, gdk_window_get_width (wd), gdk_window_get_height (wd));
     return FALSE;
 }
 
@@ -1847,11 +1835,9 @@ static void
 set_background (GdkPixbuf *new_bg)
 {
     GdkRectangle monitor_geometry;
-    GdkPixbuf *bg = NULL, *p = NULL;
+    GdkPixbuf *bg = NULL;
     GSList *iter;
-    gint i, p_height, p_width, offset_x = 0, offset_y = 0;
-    gdouble scale_x, scale_y, scale;
-    gint num_screens = 1;
+    gint i, num_screens = 1;
 
     if (new_bg)
         bg = new_bg;
@@ -1877,7 +1863,7 @@ set_background (GdkPixbuf *new_bg)
         for (monitor = 0; monitor < gdk_screen_get_n_monitors (screen); monitor++)
         {
             gdk_screen_get_monitor_geometry (screen, monitor, &monitor_geometry);
-            draw_background (c, monitor_geometry.width, monitor_geometry.height);
+            draw_background (c, bg, monitor_geometry.width, monitor_geometry.height);
             iter = g_slist_nth (backgrounds, monitor);
             gtk_widget_queue_draw (GTK_WIDGET (iter->data));
         }
