@@ -610,7 +610,6 @@ static void draw_background (cairo_t *c, GdkPixbuf *bg, gint m_width, gint m_hei
         gdk_cairo_set_source_pixbuf (c, p, offset_x, offset_y);
         if (!strcmp (wp_mode, "tile")) cairo_pattern_set_extend (cairo_get_source (c), CAIRO_EXTEND_REPEAT);
     }
-    else gdk_cairo_set_source_color (c, default_background_color);
     cairo_paint (c);
 }
 
@@ -1848,11 +1847,6 @@ main (int argc, char **argv)
     gtk_widget_set_tooltip_text(GTK_WIDGET(password_entry), _("Enter your password"));
     gtk_widget_set_tooltip_text(GTK_WIDGET(username_entry), _("Enter your username"));
 
-    gtk_accel_map_add_entry ("<Login>/a11y/font", GDK_KEY_F1, 0);
-    gtk_accel_map_add_entry ("<Login>/a11y/contrast", GDK_KEY_F2, 0);
-    gtk_accel_map_add_entry ("<Login>/a11y/keyboard", GDK_KEY_F3, 0);
-    gtk_accel_map_add_entry ("<Login>/power/shutdown", GDK_KEY_F4, GDK_MOD1_MASK);
-
 #ifdef START_INDICATOR_SERVICES
     init_indicators (config, &indicator_pid, &spi_pid);
 #else
@@ -1887,6 +1881,7 @@ main (int argc, char **argv)
     #endif
 
     /* Set up the background images */	
+    gdk_color_parse ("#000000", &background_color);
     for (scr = 0; scr < numScreens; scr++)
     {
         screen = gdk_display_get_screen (gdk_display_get_default (), scr);
