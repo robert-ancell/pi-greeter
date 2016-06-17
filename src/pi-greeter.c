@@ -56,6 +56,8 @@ static gchar *default_font_name, *default_theme_name, *default_icon_theme_name;
 static GdkPixbuf *default_background_pixbuf = NULL;
 
 /* Panel Widgets */
+static GtkWidget *clock_label;
+static GtkWidget *keyboard_menuitem;
 static GtkWidget *menubar, *power_menuitem, *session_menuitem, *language_menuitem;
 static GtkMenu *session_menu, *language_menu;
 
@@ -69,6 +71,8 @@ static GtkInfoBar *info_bar;
 static GtkButton *cancel_button, *login_button;
 
 static gchar **a11y_keyboard_command;
+static GPid a11y_kbd_pid = 0;
+static GError *a11y_keyboard_error;
 static GtkWindow *onboard_window;
 
 /* Pending Questions */
@@ -1154,6 +1158,7 @@ gboolean
 login_window_key_press_cb (GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
     GtkWidget *item = NULL;
+    return FALSE;
 
     if (event->keyval == GDK_KEY_F9)
         item = session_menuitem;
@@ -1592,6 +1597,140 @@ user_removed_cb (LightDMUserList *user_list, LightDMUser *user)
 
     model = gtk_combo_box_get_model (user_combo);
     gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
+}
+
+void a11y_font_cb (GtkCheckMenuItem *item);
+G_MODULE_EXPORT
+void
+a11y_font_cb (GtkCheckMenuItem *item)
+{
+    if (gtk_check_menu_item_get_active (item))
+    {
+        gchar *font_name, **tokens;
+        guint length;
+
+        /* Hide the clock since indicators are about to eat the screen. */
+        gtk_widget_hide(GTK_WIDGET(clock_label));
+
+        g_object_get (gtk_settings_get_default (), "gtk-font-name", &font_name, NULL);
+        tokens = g_strsplit (font_name, " ", -1);
+        length = g_strv_length (tokens);
+        if (length > 1)
+        {
+            gint size = atoi (tokens[length - 1]);
+            if (size > 0)
+            {
+                g_free (tokens[length - 1]);
+                tokens[length - 1] = g_strdup_printf ("%d", size + 10);
+                g_free (font_name);
+                font_name = g_strjoinv (" ", tokens);
+            }
+        }
+        g_strfreev (tokens);
+
+        g_object_set (gtk_settings_get_default (), "gtk-font-name", font_name, NULL);
+    }
+    else
+    {
+        g_object_set (gtk_settings_get_default (), "gtk-font-name", default_font_name, NULL);
+        /* Show the clock as needed */
+        gtk_widget_show_all(GTK_WIDGET(clock_label));
+    }
+}
+
+void a11y_contrast_cb (GtkCheckMenuItem *item);
+G_MODULE_EXPORT
+void
+a11y_contrast_cb (GtkCheckMenuItem *item)
+{
+    if (gtk_check_menu_item_get_active (item))
+    {
+        g_object_set (gtk_settings_get_default (), "gtk-theme-name", "HighContrast", NULL);
+        g_object_set (gtk_settings_get_default (), "gtk-icon-theme-name", "HighContrast", NULL);
+    }
+    else
+    {
+        g_object_set (gtk_settings_get_default (), "gtk-theme-name", default_theme_name, NULL);
+        g_object_set (gtk_settings_get_default (), "gtk-icon-theme-name", default_icon_theme_name, NULL);
+    }
+}
+
+static void
+keyboard_terminated_cb (GPid pid, gint status, gpointer user_data)
+{
+    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (keyboard_menuitem), FALSE);
+}
+
+void a11y_keyboard_cb (GtkCheckMenuItem *item);
+G_MODULE_EXPORT
+void
+a11y_keyboard_cb (GtkCheckMenuItem *item)
+{
+    if (gtk_check_menu_item_get_active (item))
+    {
+        gboolean spawned = FALSE;
+        if (onboard_window)
+        {
+            GtkSocket* socket = NULL;
+            gint out_fd = 0;
+
+            if (g_spawn_async_with_pipes (NULL, a11y_keyboard_command, NULL, G_SPAWN_SEARCH_PATH,
+                                          NULL, NULL, &a11y_kbd_pid, NULL, &out_fd, NULL,
+                                          &a11y_keyboard_error))
+            {
+                gchar* text = NULL;
+                GIOChannel* out_channel = g_io_channel_unix_new (out_fd);
+                if (g_io_channel_read_line(out_channel, &text, NULL, NULL, &a11y_keyboard_error) == G_IO_STATUS_NORMAL)
+                {
+                    gchar* end_ptr = NULL;
+
+                    text = g_strstrip (text);
+                    gint id = g_ascii_strtoll (text, &end_ptr, 0);
+
+                    if (id != 0 && end_ptr > text)
+                    {
+                        socket = GTK_SOCKET (gtk_socket_new ());
+                        gtk_container_add (GTK_CONTAINER (onboard_window), GTK_WIDGET (socket));
+                        gtk_socket_add_id (socket, id);
+                        gtk_widget_show_all (GTK_WIDGET (onboard_window));
+                        spawned = TRUE;
+                    }
+                    else
+                        g_debug ("onboard keyboard command error : 'unrecognized output'");
+
+                    g_free(text);
+                }
+            }
+        }
+        else
+        {
+            spawned = g_spawn_async (NULL, a11y_keyboard_command, NULL,
+                                     G_SPAWN_SEARCH_PATH | G_SPAWN_DO_NOT_REAP_CHILD,
+                                     NULL, NULL, &a11y_kbd_pid, &a11y_keyboard_error);
+            if (spawned)
+                g_child_watch_add (a11y_kbd_pid, keyboard_terminated_cb, NULL);
+        }
+
+        if(!spawned)
+        {
+            if (a11y_keyboard_error)
+                g_debug ("a11y keyboard command error : '%s'", a11y_keyboard_error->message);
+            a11y_kbd_pid = 0;
+            g_clear_error(&a11y_keyboard_error);
+            gtk_check_menu_item_set_active (item, FALSE);
+        }
+    }
+    else
+    {
+        if (a11y_kbd_pid != 0)
+        {
+            kill (a11y_kbd_pid, SIGTERM);
+            g_spawn_close_pid (a11y_kbd_pid);
+            a11y_kbd_pid = 0;
+            if (onboard_window)
+                gtk_widget_hide (GTK_WIDGET(onboard_window));
+        }
+    }
 }
 
 static void
@@ -2178,6 +2317,11 @@ main (int argc, char **argv)
     gtk_container_set_border_width (GTK_CONTAINER(gtk_builder_get_object (builder, "buttonbox_frame")), 8);
     gtk_widget_set_tooltip_text(GTK_WIDGET(password_entry), _("Enter your password"));
     gtk_widget_set_tooltip_text(GTK_WIDGET(username_entry), _("Enter your username"));
+
+    gtk_accel_map_add_entry ("<Login>/a11y/font", GDK_KEY_F1, 0);
+    gtk_accel_map_add_entry ("<Login>/a11y/contrast", GDK_KEY_F2, 0);
+    gtk_accel_map_add_entry ("<Login>/a11y/keyboard", GDK_KEY_F3, 0);
+    gtk_accel_map_add_entry ("<Login>/power/shutdown", GDK_KEY_F4, GDK_MOD1_MASK);
 
 #ifdef START_INDICATOR_SERVICES
     init_indicators (config, &indicator_pid, &spi_pid);
