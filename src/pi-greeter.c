@@ -40,7 +40,6 @@ static GKeyFile *state;
 static gchar *state_filename;
 
 /* Defaults */
-static gchar *default_font_name, *default_theme_name, *default_icon_theme_name;
 static GdkPixbuf *default_background_pixbuf = NULL;
 
 /* Panel Widgets */
@@ -1650,7 +1649,7 @@ focus_upon_map (GdkXEvent *gxevent, GdkEvent *event, gpointer  data)
 int
 main (int argc, char **argv)
 {
-    GKeyFile *config, *userconf;
+    GKeyFile *config, *userconf, *sessconf;
     GdkRectangle monitor_geometry;
     GtkBuilder *builder;
     GtkCellRenderer *renderer;
@@ -1658,6 +1657,8 @@ main (int argc, char **argv)
     gchar *value, *state_dir;
     GdkColor background_color;
     GError *error = NULL;
+    gchar *user, *session;
+    gchar buffer[256];
 
     /* Background windows */
     gint monitor, scr;
@@ -1720,15 +1721,21 @@ main (int argc, char **argv)
     gdk_window_set_cursor (gdk_get_default_root_window (), gdk_cursor_new (GDK_LEFT_PTR));
 
     /* Create the pcmanfm config file path */
-    gchar *user, *session;
     user = g_key_file_get_value (config, "greeter", "user", NULL);
     session = g_key_file_get_value (config, "greeter", "session", NULL);
-    gchar buffer[256];
     sprintf (buffer, "/home/%s/.config/pcmanfm/%s/desktop-items-0.conf", user, session);
     userconf = g_key_file_new ();
     g_key_file_load_from_file (userconf, buffer, G_KEY_FILE_NONE, &error);
     if (error && !g_error_matches (error, G_FILE_ERROR, G_FILE_ERROR_NOENT))
         g_warning ("Failed to load user configuration from %s: %s\n", buffer, error->message);
+    g_clear_error (&error);
+
+    /* Create the lxsession config file path */
+    sprintf (buffer, "/home/%s/.config/lxsession/%s/desktop.conf", user, session);
+    sessconf = g_key_file_new ();
+    g_key_file_load_from_file (sessconf, buffer, G_KEY_FILE_NONE, &error);
+    if (error && !g_error_matches (error, G_FILE_ERROR, G_FILE_ERROR_NOENT))
+        g_warning ("Failed to load session configuration from %s: %s\n", buffer, error->message);
     g_clear_error (&error);
 
     /* Get background colour from pcmanfm settings */
@@ -1777,38 +1784,27 @@ main (int argc, char **argv)
     }
 
     /* Set GTK+ settings */
-    value = g_key_file_get_value (config, "greeter", "theme-name", NULL);
+    value = g_key_file_get_value (sessconf, "GTK", "sNet/ThemeName", NULL);
     if (value)
     {
         g_debug ("Using Gtk+ theme %s", value);
         g_object_set (gtk_settings_get_default (), "gtk-theme-name", value, NULL);
+        g_free (value);
     }
-    g_free (value);
-    g_object_get (gtk_settings_get_default (), "gtk-theme-name", &default_theme_name, NULL);
-    g_debug ("Default Gtk+ theme is '%s'", default_theme_name);
 
-    value = g_key_file_get_value (config, "greeter", "icon-theme-name", NULL);
+    value = g_key_file_get_value (sessconf, "GTK", "sNet/IconThemeName", NULL);
     if (value)
     {
         g_debug ("Using icon theme %s", value);
         g_object_set (gtk_settings_get_default (), "gtk-icon-theme-name", value, NULL);
+        g_free (value);
     }
-    g_free (value);
-    g_object_get (gtk_settings_get_default (), "gtk-icon-theme-name", &default_icon_theme_name, NULL);
-    g_debug ("Default theme is '%s'", default_icon_theme_name);
 
-    value = g_key_file_get_value (config, "greeter", "font-name", NULL);
-    if (value)
-    {
-        g_debug ("Using font %s", value);
-        g_object_set (gtk_settings_get_default (), "gtk-font-name", value, NULL);
-    }
-    else
-    {
-        value = g_strdup("Sans 10");
-        g_object_set (gtk_settings_get_default (), "gtk-font-name", value, NULL);
-    }
-    g_object_get (gtk_settings_get_default (), "gtk-font-name", &default_font_name, NULL);  
+    value = g_key_file_get_value (sessconf, "GTK", "sGtk/FontName", NULL);
+    if (value) g_debug ("Using font %s", value);
+    else value = g_strdup ("Sans 10");
+    g_object_set (gtk_settings_get_default (), "gtk-font-name", value, NULL);
+    g_free (value);
 
     builder = gtk_builder_new ();
 	gtk_builder_add_from_file (builder, GREETER_DATA_DIR "/pi-greeter.glade", NULL);
@@ -1860,7 +1856,7 @@ main (int argc, char **argv)
             default_user_icon = g_strdup (value + 1);
         else
         {
-            default_user_pixbuf = gdk_pixbuf_new_from_file (value, &error);
+            default_user_pixbuf = gdk_pixbuf_new_from_file_at_scale (value, -1, 80, TRUE, &error);
             if (!default_user_pixbuf)
             {
                 g_warning ("Failed to load default user image: %s", error->message);
