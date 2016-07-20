@@ -1,3 +1,2 @@
-src/lightdm-gtk-greeter.c
-
-src/lightdm-gtk-greeter.glade
+src/pi-greeter.c
+data/pi-greeter.glade

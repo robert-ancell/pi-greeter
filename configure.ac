@@ -99,7 +99,7 @@ dnl Internationalization
 dnl ###########################################################################
 
 IT_PROG_INTLTOOL(0.35.0)
-AC_SUBST(GETTEXT_PACKAGE, lightdm-gtk-greeter)
+AC_SUBST(GETTEXT_PACKAGE, pi-greeter)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", Gettext package)
 
 dnl ###########################################################################
@@ -109,7 +109,6 @@ dnl ###########################################################################
 AC_CONFIG_FILES([
 Makefile
 data/Makefile
-data/badges/Makefile
 po/Makefile.in
 src/Makefile
 ])

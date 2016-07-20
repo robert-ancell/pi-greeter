@@ -13253,7 +13253,7 @@ fi
 
 
 
-GETTEXT_PACKAGE=lightdm-gtk-greeter
+GETTEXT_PACKAGE=pi-greeter
 
 
 cat >>confdefs.h <<_ACEOF
@@ -13262,7 +13262,7 @@ _ACEOF
 
 
 
-ac_config_files="$ac_config_files Makefile data/Makefile data/badges/Makefile po/Makefile.in src/Makefile"
+ac_config_files="$ac_config_files Makefile data/Makefile po/Makefile.in src/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -14283,7 +14283,6 @@ do
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "data/Makefile") CONFIG_FILES="$CONFIG_FILES data/Makefile" ;;
-    "data/badges/Makefile") CONFIG_FILES="$CONFIG_FILES data/badges/Makefile" ;;
     "po/Makefile.in") CONFIG_FILES="$CONFIG_FILES po/Makefile.in" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "po/stamp-it") CONFIG_COMMANDS="$CONFIG_COMMANDS po/stamp-it" ;;
