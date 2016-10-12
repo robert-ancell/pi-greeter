@@ -1649,7 +1649,7 @@ focus_upon_map (GdkXEvent *gxevent, GdkEvent *event, gpointer  data)
 int
 main (int argc, char **argv)
 {
-    GKeyFile *config, *userconf, *sessconf;
+    GKeyFile *config;
     GdkRectangle monitor_geometry;
     GtkBuilder *builder;
     GtkCellRenderer *renderer;
@@ -1657,8 +1657,6 @@ main (int argc, char **argv)
     gchar *value, *state_dir;
     GdkColor background_color;
     GError *error = NULL;
-    gchar *user, *session;
-    gchar buffer[256];
 
     /* Background windows */
     gint monitor, scr;
@@ -1720,33 +1718,15 @@ main (int argc, char **argv)
     /* Set default cursor */
     gdk_window_set_cursor (gdk_get_default_root_window (), gdk_cursor_new (GDK_LEFT_PTR));
 
-    /* Create the pcmanfm config file path */
-    user = g_key_file_get_value (config, "greeter", "user", NULL);
-    session = g_key_file_get_value (config, "greeter", "session", NULL);
-    sprintf (buffer, "/home/%s/.config/pcmanfm/%s/desktop-items-0.conf", user, session);
-    userconf = g_key_file_new ();
-    g_key_file_load_from_file (userconf, buffer, G_KEY_FILE_NONE, &error);
-    if (error && !g_error_matches (error, G_FILE_ERROR, G_FILE_ERROR_NOENT))
-        g_warning ("Failed to load user configuration from %s: %s\n", buffer, error->message);
-    g_clear_error (&error);
-
-    /* Create the lxsession config file path */
-    sprintf (buffer, "/home/%s/.config/lxsession/%s/desktop.conf", user, session);
-    sessconf = g_key_file_new ();
-    g_key_file_load_from_file (sessconf, buffer, G_KEY_FILE_NONE, &error);
-    if (error && !g_error_matches (error, G_FILE_ERROR, G_FILE_ERROR_NOENT))
-        g_warning ("Failed to load session configuration from %s: %s\n", buffer, error->message);
-    g_clear_error (&error);
-
-    /* Get background colour from pcmanfm settings */
-    value = g_key_file_get_value (userconf, "*", "desktop_bg", NULL);
+    /* Get background colour */
+    value = g_key_file_get_value (config, "greeter", "desktop_bg", NULL);
     if (!value || !gdk_color_parse (value, &background_color))
             gdk_color_parse ("#C0C0C0", &background_color);
     if (value) g_free (value);
     default_background_color = gdk_color_copy (&background_color);
 
-    /* Get background image from pcmanfm settings */
-    value = g_key_file_get_value (userconf, "*", "wallpaper", NULL);
+    /* Get background image */
+    value = g_key_file_get_value (config, "greeter", "wallpaper", NULL);
     if (value)
     {
         GError *error = NULL;
@@ -1759,14 +1739,37 @@ main (int argc, char **argv)
         g_free (value);
     }
 
-    /* Get display mode from pcmanfm settings */
-    value = g_key_file_get_value (userconf, "*", "wallpaper_mode", NULL);
+    /* Get display mode */
+    value = g_key_file_get_value (config, "greeter", "wallpaper_mode", NULL);
     if (value)
     {
         wp_mode = g_strdup (value);
         g_free (value);
     }
     else wp_mode = g_strdup ("color");
+
+    /* Set GTK+ settings */
+    value = g_key_file_get_value (config, "greeter", "gtk-theme-name", NULL);
+    if (value)
+    {
+        g_debug ("Using Gtk+ theme %s", value);
+        g_object_set (gtk_settings_get_default (), "gtk-theme-name", value, NULL);
+        g_free (value);
+    }
+
+    value = g_key_file_get_value (config, "greeter", "gtk-icon-theme-name", NULL);
+    if (value)
+    {
+        g_debug ("Using icon theme %s", value);
+        g_object_set (gtk_settings_get_default (), "gtk-icon-theme-name", value, NULL);
+        g_free (value);
+    }
+
+    value = g_key_file_get_value (config, "greeter", "gtk-font-name", NULL);
+    if (value) g_debug ("Using font %s", value);
+    else value = g_strdup ("Sans 10");
+    g_object_set (gtk_settings_get_default (), "gtk-font-name", value, NULL);
+    g_free (value);
 
     /* Make the greeter behave a bit more like a screensaver if used as un/lock-screen by blanking the screen */
     gchar* end_ptr = NULL;
@@ -1775,36 +1778,13 @@ main (int argc, char **argv)
     if (value)
         screensaver_timeout = g_ascii_strtoll (value, &end_ptr, 0);
     g_free (value);
-    
+
     display = gdk_x11_display_get_xdisplay(gdk_display_get_default ());
     if (lightdm_greeter_get_lock_hint (greeter)) {
         XGetScreenSaver(display, &timeout, &interval, &prefer_blanking, &allow_exposures);
         XForceScreenSaver(display, ScreenSaverActive);
         XSetScreenSaver(display, screensaver_timeout, 0, ScreenSaverActive, DefaultExposures);
     }
-
-    /* Set GTK+ settings */
-    value = g_key_file_get_value (sessconf, "GTK", "sNet/ThemeName", NULL);
-    if (value)
-    {
-        g_debug ("Using Gtk+ theme %s", value);
-        g_object_set (gtk_settings_get_default (), "gtk-theme-name", value, NULL);
-        g_free (value);
-    }
-
-    value = g_key_file_get_value (sessconf, "GTK", "sNet/IconThemeName", NULL);
-    if (value)
-    {
-        g_debug ("Using icon theme %s", value);
-        g_object_set (gtk_settings_get_default (), "gtk-icon-theme-name", value, NULL);
-        g_free (value);
-    }
-
-    value = g_key_file_get_value (sessconf, "GTK", "sGtk/FontName", NULL);
-    if (value) g_debug ("Using font %s", value);
-    else value = g_strdup ("Sans 10");
-    g_object_set (gtk_settings_get_default (), "gtk-font-name", value, NULL);
-    g_free (value);
 
     builder = gtk_builder_new ();
 	gtk_builder_add_from_file (builder, GREETER_DATA_DIR "/pi-greeter.glade", NULL);
