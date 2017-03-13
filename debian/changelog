@@ -1,3 +1,9 @@
+pi-greeter (0.4) UNRELEASED; urgency=medium
+
+  * Modified prerm script to avoid failures if lightdm not installed
+
+ -- Simon Long <simon@raspberrypi.org>  Mon, 13 Mar 2017 10:36:42 +0000
+
 pi-greeter (0.3) jessie; urgency=medium
 
   * Modified to pull desktop and theme information from greeter config file rather than user home dir
