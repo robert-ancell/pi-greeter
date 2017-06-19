@@ -1,3 +1,9 @@
+pi-greeter (0.6) stretch; urgency=medium
+
+  * Use Piboto font; update greeter-hide-users setting for Stretch
+
+ -- Simon Long <simon@raspberrypi.org>  Mon, 19 Jun 2017 15:13:01 +0100
+
 pi-greeter (0.5) jessie; urgency=medium
 
   * Change path to default wallpaper.
