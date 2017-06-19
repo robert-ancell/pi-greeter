@@ -1,4 +1,10 @@
-pi-greeter (0.4) UNRELEASED; urgency=medium
+pi-greeter (0.5) jessie; urgency=medium
+
+  * Change path to default wallpaper.
+
+ -- Simon Long <simon@raspberrypi.org>  Mon, 19 Jun 2017 14:45:27 +0100
+
+pi-greeter (0.4) jessie; urgency=medium
 
   * Modified prerm script to avoid failures if lightdm not installed
 
