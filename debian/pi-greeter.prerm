@@ -4,9 +4,6 @@ set -e
 
 if [ "$1" = "remove" ]; then
   update-alternatives --remove lightdm-greeter /usr/share/xgreeters/pi-greeter.desktop
-  if [ -e /etc/lightdm/lightdm.conf ] ; then
-    sed -i /etc/lightdm/lightdm.conf -e "s/^greeter-session=pi-greeter/#greeter-session=pi-greeter/"
-  fi
 fi
 
 #DEBHELPER#

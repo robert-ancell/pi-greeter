@@ -6,9 +6,7 @@ if [ "$1" = "configure" ]; then
   update-alternatives --install /usr/share/xgreeters/lightdm-greeter.desktop \
   lightdm-greeter /usr/share/xgreeters/pi-greeter.desktop 70
   if [ -e /etc/lightdm/lightdm.conf ] ; then
-    sed -i /etc/lightdm/lightdm.conf -e "s/#\?greeter-hide-users=.*/greeter-hide-users=false/"
-    sed -i /etc/lightdm/lightdm.conf -e "s/#\?greeter-session=.*/greeter-session=pi-greeter/"
-    sed -i /etc/lightdm/lightdm.conf -e "s/#\?autologin-user=.*/autologin-user=pi/"
+    sed -i /etc/lightdm/lightdm.conf -e "s/^greeter-session=pi-greeter/#greeter-session=pi-greeter/"
   fi
 fi
 

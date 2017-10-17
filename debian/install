@@ -1,0 +1,1 @@
+debian/50-pi-greeter.conf /usr/share/lightdm/lightdm.conf.d/
